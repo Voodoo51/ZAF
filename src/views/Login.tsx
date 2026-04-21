@@ -31,6 +31,7 @@ export const LoginView = () => {
         className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
         value={login}
         onChange={(e) => setLogin(e.target.value)}
+        autoFocus
       />
 
       <input
@@ -39,6 +40,10 @@ export const LoginView = () => {
         className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        onKeyDown={(e) => {
+          if(e.key == "Enter")
+            handleLogin();
+        }}
       />
 
       <div className="flex justify-between items-center text-sm mb-5">
