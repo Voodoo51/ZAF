@@ -12,6 +12,7 @@ const Sidebar = () => {
       <nav className="flex flex-col gap-2">
         <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/">Home</Link>
         <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/profile">Profile</Link>
+        <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/form">Form</Link>
       </nav>
 
       <button
