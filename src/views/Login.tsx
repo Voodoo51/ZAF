@@ -1,22 +1,53 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../App";
 import GoogleIcon from "../resources/google-icon.png"
 
 export const LoginView = () => {
-  const { setUser } = useAppContext();
+  const { user, setUser } = useAppContext();
   const navigate = useNavigate();
 
-  const [login, setLogin] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+
+  useEffect(() => { 
+    handleLogin()
+  }, []);
 
   const handleLogin = () => {
+    fetch('http://localhost:8080/user/login', 
+      {
+        credentials: 'include', 
+        mode: 'cors',
+        method: 'POST', 
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(formData)
+      })
+    .then(res => res.json()
+      .then(data => {
+        if (res.ok) { //later, add internal server error handling(and other errors handling aswell)
+          console.log('Response:', data);
+          setUser(data);
+          navigate("/");
+        } else setUser(null);
+      }).catch(err => {
+        setUser(null); //just in case
+        console.log('Error parsing user info:', err)}
+      )
+    ).catch(err => console.log('Error receiving user info:', err));
+    
+    
+
+    /*
     if (login === "admin" && password === "123") {
       setUser(login);
       navigate("/");
     } else {
       alert("Wrong credentials");
     }
+    */
   };
 
   return (
@@ -29,16 +60,16 @@ export const LoginView = () => {
       <input
         placeholder="Login"
         className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-        value={login}
-        onChange={(e) => setLogin(e.target.value)}
+        value={formData.email}
+        onChange={(e) => setFormData({email: e.target.value, password: formData.password})}
       />
 
       <input
         type="password"
         placeholder="Password"
         className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        value={formData.password}
+        onChange={(e) => setFormData({email: formData.email, password: e.target.value})}
       />
 
       <div className="flex justify-between items-center text-sm mb-5">

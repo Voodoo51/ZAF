@@ -3,9 +3,15 @@ import { BrowserRouter, Routes, Route, Link, Navigate, useNavigate } from "react
 import { Nav } from "./Navigation";
 
 type AppContextType = {
-  user: string | null;
-  setUser: (user: string | null) => void;
+  user: User | null;
+  setUser: (user: User | null) => void;
 };
+
+type User = {
+  id: number;
+  name: string | null;
+  surname: string | null;
+}
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
@@ -16,7 +22,7 @@ export const useAppContext = () => {
 };
 
 const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   return <AppContext.Provider value={{ user, setUser }}>{children}</AppContext.Provider>;
 };
 

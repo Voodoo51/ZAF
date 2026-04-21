@@ -16,7 +16,20 @@ const Sidebar = () => {
 
       <button
         className="mt-auto px-3 py-2 rounded-lg border border-gray-300 bg-gray-50 hover:bg-gray-100"
-        onClick={() => setUser(null)}
+        onClick={() => {
+          fetch('http://localhost:8080/user/logout',
+              {
+                credentials: 'include', 
+                mode: 'cors',
+                method: 'POST',
+              } 
+          )
+          .then(res => {
+            if (res.ok) {
+              setUser(null);
+            }
+          }).catch(err => console.log('Error logging out user:', err));
+        }}
       >
         Logout
       </button>
