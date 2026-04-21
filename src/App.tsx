@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { createContext, useContext, useState, ReactNode } from "react";
+import { BrowserRouter, Routes, Route, Link, Navigate, useNavigate } from "react-router-dom";
+import { Nav } from "./Navigation";
 
-function App() {
+type AppContextType = {
+  user: string | null;
+  setUser: (user: string | null) => void;
+};
+
+const AppContext = createContext<AppContextType | undefined>(undefined);
+
+export const useAppContext = () => {
+  const context = useContext(AppContext);
+  if (!context) throw new Error("useAppContext must be used within AppProvider");
+  return context;
+};
+
+const AppProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<string | null>(null);
+  return <AppContext.Provider value={{ user, setUser }}>{children}</AppContext.Provider>;
+};
+
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppProvider>
+      <Nav />
+    </AppProvider>
   );
 }
-
-export default App;
