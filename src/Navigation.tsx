@@ -21,6 +21,7 @@ export const Nav = () =>{
           <Route path="/" element={<Protected><HomeView /></Protected>} />
           <Route path="/profile" element={<Protected><ProfileView /></Protected>} />
           <Route path="/form" element={<Protected><FormView /></Protected>} />
+
         </Routes>
       </BrowserRouter>
   );

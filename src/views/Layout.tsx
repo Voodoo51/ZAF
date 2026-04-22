@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { Link } from "react-router-dom";
-import { useAppContext } from "../App";
+import { useAppContext, useFilter } from "../App";
 
 const Sidebar = () => {
   const { setUser } = useAppContext();
@@ -13,6 +13,7 @@ const Sidebar = () => {
         <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/">Home</Link>
         <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/profile">Profile</Link>
         <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/form">Form</Link>
+        <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/forms">Forms</Link>
       </nav>
 
       <button
@@ -38,7 +39,17 @@ const Sidebar = () => {
   );
 };
 
-const TopBar = () => (
+
+const TopBar = () => {
+ const { active, setActive } = useFilter();
+
+const baseClass = "px-3 py-1.5 rounded-full text-sm";
+const getClass = (name:string) =>
+    active === name
+      ? `${baseClass} text-white bg-[rgb(63,152,255)]`
+      : `${baseClass} bg-gray-200 text-gray-700`;
+
+ return (
   <div className="flex items-center justify-between mb-4">
     <input
       placeholder="Search..."
@@ -46,19 +57,26 @@ const TopBar = () => (
     />
 
     <div className="flex gap-2">
-      <button className="px-3 py-1.5 rounded-full text-white bg-[rgb(63,152,255)] text-sm">Wszystkie ✓</button>
-      <button className="px-3 py-1.5 rounded-full bg-gray-200 text-gray-700 text-sm">Zaakceptowane</button>
-      <button className="px-3 py-1.5 rounded-full bg-gray-200 text-gray-700 text-sm">Oczekujące</button>
+      <button className={getClass("all")} onClick={() => setActive("all")}>Wszystkie {active === "all" && "✓"}  </button>
+      <button className={getClass("accepted")} onClick={() => setActive("accepted")}> Zaakceptowane {active === "accepted" && "✓"} </button>
+      <button className={getClass("pending")} onClick={() => setActive("pending")}>Oczekujące {active === "pending" && "✓"}  </button>
+      <button className={getClass("denied")} onClick={() => setActive("denied")}>Odrzucone {active === "denied" && "✓"} </button>
+      <button className={getClass("unsend")} onClick={() => setActive("unsend")}>Niewysłane {active === "unsend" && "✓"}  </button>
     </div>
   </div>
 );
+};
 
-export const Layout = ({ children }: { children: ReactNode }) => (
+export const Layout = ({ children }: { children: ReactNode }) => {
+
+    const [active, setActive] = useState("all");
+    return(
   <div className="flex min-h-screen bg-gray-50">
     <Sidebar />
     <main className="flex-1 p-6">
-      <TopBar />
-      {children}
+      <TopBar/>
+      <div>{children}</div>
     </main>
   </div>
 );
+};
