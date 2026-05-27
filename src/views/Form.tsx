@@ -1,133 +1,156 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-type TFormData = {
-    name: String,
-    surname: String,
-    album: String,
-    pesel: String,
-    faculty: String,
-    formOfStudy: String,
-    accountNr: String
-}
+type TTemplateField = {
+    id: number;
+    label: string;
+    placeholder: string;
+    type: string;
+};
+
+type TFormTemplate = {
+    id: number;
+    title: string;
+    formFields: TTemplateField[];
+};
+
+type TFilledFormField = {
+    id: number;
+    value: string;
+};
 
 export const FormView = () => {
-  const [name, setName] = useState<String>("");
-  const [surname, setSurname] = useState<String>("");
-  const [album, setAlbum] = useState<String>("");
-  const [pesel, setPesel] = useState<String>("");
-  const [faculty, setFaculty] = useState<String>("wbia");
-  const [formOfStudy, setFormOfStudy] = useState<String>("full-time");
-  const [accountNr, setAccountNr] = useState<String>("");
+    const [template, setTemplate] =
+        useState<TFormTemplate | null>(null);
 
-  const sendForm = () => {
-    const formData: TFormData = {
-        name,
-        surname,
-        album,
-        pesel,
-        faculty,
-        formOfStudy,
-        accountNr
+    const [formData, setFormData] = useState<Record<number, string>>({});
+    const [editable, setEditable] = useState<boolean>(true);
+    const { templateId } = useParams();
+    const navigate = useNavigate();
+    
+    useEffect(() => {
+        fetch(`http://localhost:8080/form/templates/${templateId}`, {
+                credentials: 'include', 
+                mode: 'cors',
+                method: 'GET',
+        })
+            .then(res => res.json())
+            .then(data => {
+                setTemplate(data);
+                if (data.statusId != 3 && data.statusId != 4) {
+                    setEditable(false);
+                }
+
+                if (data.formFilledFields?.length) {
+                  const filledMap: Record<number, string> = {};
+
+                  data.formFilledFields.forEach((field: TFilledFormField) => {
+                      filledMap[field.id] = field.value;
+                  });
+
+                  setFormData(filledMap);
+              }
+            });
+
+    }, [templateId]);
+
+    const changeValue = (
+        id: number,
+        value: string
+    ) => {
+        setFormData(prev => ({
+            ...prev,
+            [id]: value
+        }));
+    };
+
+    const sendForm = async () => {
+
+        if (!template) return;
+
+        const filledFields: TFilledFormField[] =
+            template.formFields.map(field => ({
+                id: field.id,
+                value: formData[field.id] || ""
+            }));
+            console.log(filledFields);
+        const response = await fetch(
+            "http://localhost:8080/form/send",
+            {
+                credentials: 'include', 
+                mode: 'cors',
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    formTemplateId: Number(templateId),
+                    formData: filledFields
+                })
+            }
+        );
+
+        if (response.ok) {
+            navigate("/");
+        }
+    };
+
+    if (!template) {
+        return <div>Loading...</div>;
     }
-    console.log(formData);
-  }
 
-//   Funkcja przechwytuje kliknięcia, sprawdza czy to nie
-//   backspace i przechwytuje próby wpisania czegoś
-//   co nie jest liczbą
-  const validateIfNaN = (e: any) => {
-    e.persist();
-    if(e.keyCode === 8)
-        return;
-    if(!(e.keyCode >= 48 && e.keyCode <= 57))
-        e.preventDefault();
-  }
+    return (
+        <div className="min-h-screen bg-gray-50 p-10 flex justify-center">
+            <div className="bg-white shadow-md rounded-2xl p-8 w-full max-w-2xl">
+                
+                <h1 className="text-3xl font-semibold mb-8 text-center">
+                    {template.title}
+                </h1>
 
-  return (
-  <div className="py-5 flex items-center justify-center bg-gray-50">
-    <div className="bg-white p-10 rounded-2xl shadow-md w-full max-w-md">
-      <h1 className="text-2xl font-semibold text-center mb-6">
-        Stypendium 2025/26
-      </h1>
+                <div className="space-y-5">
+                    {template.formFields.map(field => {
 
-      <div className="flex justify-between items-center text-sm mb-5">
-        <input
-            placeholder="Imię"
-            className="w-40 mb-3 px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-            autoFocus
-            onChange={(e) => setName(e.target.value)}
-        />
-        <input
-            placeholder="Nazwisko"
-            className="w-40 mb-3 px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-            onChange={(e) => setSurname(e.target.value)}
-        />
-      </div>
+                        return (
+                            <div
+                                key={field.id}
+                                className="flex flex-col"
+                            >
+                                <label className="mb-2 text-sm font-medium text-gray-700">
+                                    {field.label}
+                                </label>
 
+                                <input
+                                    type="text"
+                                    placeholder={editable ? field.placeholder : ""}
+                                    value={formData[field.id] || ""} 
+                                    className="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                    disabled={!editable}
+                                    onChange={(e) =>
+                                        changeValue(
+                                            field.id,
+                                            e.target.value
+                                        )
+                                    }
+                                />
+                            </div>
+                        );
 
-      <div className="flex justify-between items-center text-sm mb-5">
-        <input
-            placeholder="Album"
-            maxLength={7}
-            className="w-24 mb-4 px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-            onKeyDown={(e) => {
-                validateIfNaN(e)
-            }}
-            onChange={(e) => setAlbum(e.target.value)}
-        />
-        <input
-            placeholder="PESEL"
-            maxLength={11}
-            className="w-32 mb-4 px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-            onKeyDown={(e) => {
-                validateIfNaN(e)
-            }}
-            onChange={(e) => setPesel(e.target.value)}
-        />
-      </div>
+                    })}
+                </div>
 
-      <select
-        className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-        onChange={(e) => setFaculty(e.target.value)}
-      >
-        <option value="wbia">Wydział Budownictwa i Architektury</option>
-        <option value="wmibm">Wydział Mechatroniki i Budowy Maszyn</option>
-        <option value="wzimk">Wydział Zarządzania i Modelowania Komputerowego</option>
-        <option value="weaii">Wydział Elektrotechniki, Automatyki i Informatyki</option>
-      </select>
-
-      <select
-        className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-        onChange={(e) => setFormOfStudy(e.target.value)}
-      >
-        <option value="full-time">stacjonarne</option>
-        <option value="part-time">niestacjonarne</option>
-      </select>
-
-      <input
-            placeholder="Nr konta bankowego"
-            maxLength={26}
-            className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-            onKeyDown={(e) => {
-                validateIfNaN(e)
-            }}
-            onChange={(e) => setAccountNr(e.target.value)}
-      />
-      
-      <div className="flex justify-between items-center text-sm mb-5">
-        <button
-            className="w-fit px-2 py-3 mb-4 rounded-lg text-white bg-[rgb(63,152,255)] hover:opacity-90 transition"
-            onClick={sendForm}
-        >
-            Prześlij formularz
-        </button>
-        <button
-            className="w-fit px-2 py-3 mb-4 rounded-lg text-white bg-[rgb(199,199,199)] hover:opacity-90 transition"
-        >
-            Zobacz podgląd
-        </button>
-      </div>
-    </div>
-  </div>
-  );
+                <button
+                    onClick={sendForm}
+                    disabled={!editable}
+                    className={`
+                        mt-8 w-full text-white font-medium py-3 rounded-lg transition
+                        ${editable
+                            ? "bg-blue-500 hover:bg-blue-600 cursor-pointer"
+                            : "bg-gray-400 cursor-not-allowed"}
+                    `}
+                >
+                    Submit
+                </button>
+            </div>
+        </div>
+    );
 };

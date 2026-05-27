@@ -21,7 +21,7 @@ export const Nav = () =>{
           <Route path="/login" element={<LoginView />} />
           <Route path="/" element={<Protected><HomeView /></Protected>} />
           <Route path="/profile" element={<Protected><ProfileView /></Protected>} />
-          <Route path="/form" element={<Protected><FormView /></Protected>} />
+          <Route path="/form/:templateId" element={<Protected><FormView /></Protected>} />
           <Route path="/creator" element={<Protected><CreatorView/></Protected>} />
         </Routes>
       </BrowserRouter>

@@ -27,17 +27,17 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
 };
 
 type FilterContextType = {
-  active: string;
-  setActive: (value: string) => void;
+  filterId: number;
+  setFilterId: (value: number) => void;
 };
 
 const FilterContext = createContext<FilterContextType | undefined>(undefined);
 
 export const FilterProvider = ({ children }: { children: ReactNode }) => {
-  const [active, setActive] = useState("all");
+  const [filterId, setFilterId] = useState(-1);
 
   return (
-    <FilterContext.Provider value={{ active, setActive }}>
+    <FilterContext.Provider value={{ filterId, setFilterId }}>
       {children}
     </FilterContext.Provider>
   );

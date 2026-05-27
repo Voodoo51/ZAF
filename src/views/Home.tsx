@@ -11,10 +11,46 @@ type SentForm = {
 
 export const HomeView = () => {
 
-  const { active } = useFilter();
+  const { filterId } = useFilter();
   const { user } = useAppContext();
   const [ tiles, setTiles ] = useState<SentForm[]>([]);
 
+  const fetchFormTemplates = () => {
+        fetch("http://localhost:8080/form/templates",
+              {
+                method: "GET",
+                credentials: "include"
+              }
+        )
+        .then(res => res.json())
+        .then(data => {
+           const mappedTiles: SentForm[] = data.map(
+            (item: any, index: number) => ({
+                id: index + 1, // React key
+                templateId: item.templateId, // backend template id
+                statusId: item.statusId,
+                title: item.title
+            })
+        );
+        
+            setTiles(mappedTiles);
+        })
+        .catch(err => {
+            console.log(
+                "Error fetching templates:",
+                err
+            );
+        });
+  }
+const filteredTiles =
+            filterId === -1
+              ? tiles
+              : tiles.filter((tile) => tile.statusId === filterId);
+
+    useEffect(() => {
+      fetchFormTemplates();
+    }, []);
+  /*
   const fetchForms = () => {
     fetch('http://localhost:8080/form/sent/'+user?.id, 
           {
@@ -36,10 +72,10 @@ export const HomeView = () => {
           )
         ).catch(err => console.log('Error receiving sent forms:', err));
   }
-
   useEffect(() => { 
     fetchForms()
   }, []);
+*/
 
   /*
   const tiles = [
@@ -59,7 +95,7 @@ export const HomeView = () => {
     <div className="bg-white p-6 rounded-2xl shadow-sm">
       <h1 className="text-2xl font-semibold mb-4">Home</h1>
 
-      <Tiles tiles= {tiles} />
+      <Tiles tiles= {filteredTiles} />
 
     </div>
   );

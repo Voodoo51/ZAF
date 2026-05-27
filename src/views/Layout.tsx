@@ -42,11 +42,11 @@ const Sidebar = () => {
 
 
 const TopBar = () => {
- const { active, setActive } = useFilter();
+ const { filterId, setFilterId } = useFilter();
 
 const baseClass = "px-3 py-1.5 rounded-full text-sm";
-const getClass = (name:string) =>
-    active === name
+const getClass = (number: number) =>
+    filterId === number
       ? `${baseClass} text-white bg-[rgb(63,152,255)]`
       : `${baseClass} bg-gray-200 text-gray-700`;
 
@@ -58,11 +58,12 @@ const getClass = (name:string) =>
     />
 
     <div className="flex gap-2">
-      <button className={getClass("all")} onClick={() => setActive("all")}>Wszystkie {active === "all" && "✓"}  </button>
-      <button className={getClass("accepted")} onClick={() => setActive("accepted")}> Zaakceptowane {active === "accepted" && "✓"} </button>
-      <button className={getClass("pending")} onClick={() => setActive("pending")}>Oczekujące {active === "pending" && "✓"}  </button>
-      <button className={getClass("denied")} onClick={() => setActive("denied")}>Odrzucone {active === "denied" && "✓"} </button>
-      <button className={getClass("unsend")} onClick={() => setActive("unsend")}>Niewysłane {active === "unsend" && "✓"}  </button>
+      <button className={getClass(-1)} onClick={() => setFilterId(-1)}>Wszystkie {filterId === -1 && "✓"}  </button>
+      <button className={getClass(0)} onClick={() => setFilterId(0)}> Zaakceptowane {filterId === 0 && "✓"} </button>
+      <button className={getClass(1)} onClick={() => setFilterId(1)}>Oczekujące {filterId === 1 && "✓"}  </button>
+      <button className={getClass(2)} onClick={() => setFilterId(2)}>Odrzucone {filterId === 2 && "✓"} </button>
+      <button className={getClass(3)} onClick={() => setFilterId(3)}>Niewysłane {filterId === 3 && "✓"}  </button>
+      <button className={getClass(4)} onClick={() => setFilterId(4)}>Wymagające aktualizacji {filterId === 4 && "✓"}  </button>
     </div>
   </div>
 );

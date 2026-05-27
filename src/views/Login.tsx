@@ -28,7 +28,7 @@ export const LoginView = () => {
         console.log('Response:', data);
         setUser(data);
         navigate("/");
-      }).catch(err => console.log('Error parsing user info:', err)).catch(err => console.log('Error receiving user info:', err)))
+      }).catch(err => console.log('Error parsing user info:', err))).catch(err => console.log('Error receiving user info:', err))
   }
 
   const handleLogin = () => {
