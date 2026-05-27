@@ -51,8 +51,8 @@ export const useFilter = () => {
 export default function App() {
   return (
     <AppProvider>
-    <FilterProvider>
-      <Nav />
+      <FilterProvider>
+        <Nav />
       </FilterProvider>
     </AppProvider>
   );
