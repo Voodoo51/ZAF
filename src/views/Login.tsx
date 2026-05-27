@@ -13,11 +13,49 @@ export const LoginView = () => {
   });
 
   useEffect(() => { 
-    handleLogin()
+    handleGetUser()
   }, []);
 
+  const handleGetUser = () => 
+  {
+    fetch('http://localhost:8080/auth/me', 
+      {
+        credentials: 'include', 
+        mode: 'cors',
+        method: 'GET', 
+        headers: {'Content-Type': 'application/json'},
+      }).then(res2 => res2.json().then(data => {
+        console.log('Response:', data);
+        setUser(data);
+        navigate("/");
+      }).catch(err => console.log('Error parsing user info:', err)).catch(err => console.log('Error receiving user info:', err)))
+  }
+
   const handleLogin = () => {
-    fetch('http://localhost:8080/user/login', 
+    fetch('http://localhost:8080/auth/login', 
+      {
+        credentials: 'include', 
+        mode: 'cors',
+        method: 'POST', 
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(formData)
+      })
+    .then(res => {
+      if (res.ok) { //later, add internal server error handling(and other errors handling aswell)
+        handleGetUser();
+      } else setUser(null);
+    }
+    ).catch(err => console.log('Error receiving user info:', err));
+    
+
+
+    
+
+    /*
+
+
+  const handleLogin = () => {
+    fetch('http://localhost:8080/auth/login', 
       {
         credentials: 'include', 
         mode: 'cors',
@@ -29,6 +67,7 @@ export const LoginView = () => {
       .then(data => {
         if (res.ok) { //later, add internal server error handling(and other errors handling aswell)
           console.log('Response:', data);
+          
           setUser(data);
           navigate("/");
         } else setUser(null);
@@ -40,7 +79,7 @@ export const LoginView = () => {
     
     
 
-    /*
+
     if (login === "admin" && password === "123") {
       setUser(login);
       navigate("/");
@@ -49,6 +88,26 @@ export const LoginView = () => {
     }
     */
   };
+
+const handleGithubOAuthLogin = () => {
+  window.location.href = 'http://localhost:8080/auth/github/oauth';
+};
+  /*
+  const handleGithubOAuthLogin = () => {
+    fetch('http://localhost:8080/auth/github/oauth', 
+      {
+        credentials: 'include', 
+        mode: 'cors',
+        method: 'GET'
+      })
+    .then(res => {
+      if (res.ok) { //later, add internal server error handling(and other errors handling aswell)
+        handleGetUser();
+      } else setUser(null);
+    }
+    ).catch(err => console.log('Error receiving user info:', err));
+  };
+  */
 
   return (
   <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -89,7 +148,9 @@ export const LoginView = () => {
         Zaloguj się
       </button>
 
-      <button className="w-full py-3 mb-4 rounded-lg border border-gray-300 bg-white flex items-center justify-center gap-3 hover:bg-gray-50 transition">
+      <button 
+        onClick={handleGithubOAuthLogin}
+        className="w-full py-3 mb-4 rounded-lg border border-gray-300 bg-white flex items-center justify-center gap-3 hover:bg-gray-50 transition">
         <img src={GoogleIcon} width={20} />
         <span className="text-sm">
           Zaloguj się za pomocą Google

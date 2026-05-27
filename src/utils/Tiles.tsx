@@ -1,19 +1,20 @@
 import { FaPlane, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
+
 type Tile = {
   id: number;
   title: string;
-  status: string;
+  statusId: number;
 };
 
 export const Tiles = ({ tiles }: { tiles: Tile[] }) => {
-    const getStatusIcon = (status: string) => {
+    const getStatusIcon = (status: number) => {
         switch (status) {
-          case "pending":
+          case 1:
             return FaPlane({ className:"text-yellow-500" });
-          case "denied":
+          case 2:
             return FaTimesCircle({ className:"text-red-500" });
-          case "accepted":
+          case 0:
             return FaCheckCircle ({className:"text-blue-500" });
           default:
             return null;
@@ -38,11 +39,11 @@ export const Tiles = ({ tiles }: { tiles: Tile[] }) => {
                 <div className="flex items-center justify-between mt-4">
                   <div className="text-sm text-gray-500">Status:</div>
                   <div className="flex items-center gap-2 text-sm">
-                    <span>{getStatusIcon(tile.status)}</span>
-                    <span className={`font-semibold ${tile.status === "pending" ? "text-yellow-500" : tile.status === "denied" ? "text-red-500" : "text-blue-500"}`}>
-                      {tile.status === "pending" && "Oczekujące"}
-                      {tile.status === "denied" && "Odrzucone"}
-                      {tile.status === "accepted" && "Zaakceptowane"}
+                    <span>{getStatusIcon(tile.statusId)}</span>
+                    <span className={`font-semibold ${tile.statusId === 1 ? "text-yellow-500" : tile.statusId === 2 ? "text-red-500" : "text-blue-500"}`}>
+                      {tile.statusId === 1 && "Oczekujące"}
+                      {tile.statusId === 2 && "Odrzucone"}
+                      {tile.statusId === 0 && "Zaakceptowane"}
                     </span>
                   </div>
                 </div>

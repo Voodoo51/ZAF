@@ -19,7 +19,7 @@ const Sidebar = () => {
       <button
         className="mt-auto px-3 py-2 rounded-lg border border-gray-300 bg-gray-50 hover:bg-gray-100"
         onClick={() => {
-          fetch('http://localhost:8080/user/logout',
+          fetch('http://localhost:8080/auth/logout',
               {
                 credentials: 'include', 
                 mode: 'cors',
