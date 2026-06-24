@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 type TTemplateField = {
@@ -20,6 +21,8 @@ type TFilledFormField = {
 };
 
 export const FormView = () => {
+    const { t } = useTranslation();
+
     const [template, setTemplate] =
         useState<TFormTemplate | null>(null);
 
@@ -96,7 +99,7 @@ export const FormView = () => {
     };
 
     if (!template) {
-        return <div>Loading...</div>;
+        return <div>{t("common.loading")}</div>;
     }
 
     return (
@@ -148,7 +151,7 @@ export const FormView = () => {
                             : "bg-gray-400 cursor-not-allowed"}
                     `}
                 >
-                    Submit
+                    {t("form.submit")}
                 </button>
             </div>
         </div>

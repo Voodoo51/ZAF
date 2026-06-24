@@ -1,6 +1,7 @@
 import {Tiles} from "../utils/Tiles";
 import {useAppContext, useFilter} from "../App";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type SentForm = {
   id: number,
@@ -10,7 +11,7 @@ type SentForm = {
 }
 
 export const HomeView = () => {
-
+  const { t } = useTranslation();
   const { filterId } = useFilter();
   const { user } = useAppContext();
   const [ tiles, setTiles ] = useState<SentForm[]>([]);
@@ -93,7 +94,7 @@ const filteredTiles =
 */
   return (
     <div className="bg-white p-6 rounded-2xl shadow-sm">
-      <h1 className="text-2xl font-semibold mb-4">Home</h1>
+      <h1 className="text-2xl font-semibold mb-4">{t("home.title")}</h1>
 
       <Tiles tiles= {filteredTiles} />
 

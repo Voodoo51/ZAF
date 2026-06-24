@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { FaPlane, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
@@ -10,21 +11,22 @@ type Tile = {
 };
 
 export const Tiles = ({ tiles }: { tiles: Tile[] }) => {
-    const navigate = useNavigate();
+  const { t } = useTranslation();
+  const navigate = useNavigate();
 
-    const getStatusIcon = (status: number) => {
-        switch (status) {
-          case 1:
-            return FaPlane({ className:"text-yellow-500" });
-          case 2:
-            return FaTimesCircle({ className:"text-red-500" });
-          case 0:
-            return FaCheckCircle ({className:"text-blue-500" });
-          default:
-            return null;
-        }
-      };
-      
+  const getStatusIcon = (status: number) => {
+      switch (status) {
+        case 1:
+          return FaPlane({ className:"text-yellow-500" });
+        case 2:
+          return FaTimesCircle({ className:"text-red-500" });
+        case 0:
+          return FaCheckCircle ({className:"text-blue-500" });
+        default:
+          return null;
+      }
+    };
+    
 
   return (
     <div className="grid grid-cols-3 gap-4">
@@ -53,11 +55,11 @@ export const Tiles = ({ tiles }: { tiles: Tile[] }) => {
                       tile.statusId === 3 ? "text-gray-500" : 
                       tile.statusId === 4 ? "text-yellow-500" : "text-blue-500"}`}>
 
-                      {tile.statusId === 4 && "Wymaga aktualizacji"}
-                      {tile.statusId === 3 && "Niewysłane"}
-                      {tile.statusId === 2 && "Odrzucone"}
-                      {tile.statusId === 1 && "Oczekujące"}
-                      {tile.statusId === 0 && "Zaakceptowane"}
+                      {tile.statusId === 4 && t("filters.requiresUpdate")}
+                      {tile.statusId === 3 && t("filters.unsent")}
+                      {tile.statusId === 2 && t("filters.rejected")}
+                      {tile.statusId === 1 && t("filters.pending")}
+                      {tile.statusId === 0 && t("filters.accepted")}
                       
                     </span>
                   </div>
