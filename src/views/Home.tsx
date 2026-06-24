@@ -93,10 +93,11 @@ const filteredTiles =
 */
   return (
     <div className="bg-white p-6 rounded-2xl shadow-sm">
-      <h1 className="text-2xl font-semibold mb-4">Home</h1>
+  <h1 className="text-2xl font-semibold mb-4">Home</h1>
 
-      <Tiles tiles= {filteredTiles} />
-
-    </div>
+  <div className="max-h-[70vh] overflow-y-auto">
+    <Tiles tiles={filteredTiles} />
+  </div>
+</div>
   );
 };
