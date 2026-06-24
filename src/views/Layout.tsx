@@ -1,19 +1,39 @@
 import { ReactNode, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppContext, useFilter } from "../App";
+import { useTranslation } from "react-i18next";
 
 const Sidebar = () => {
   const { setUser } = useAppContext();
+  const { i18n, t } = useTranslation();
 
   return (
     <aside className="w-64 bg-white border-r border-gray-200 p-4 flex flex-col">
-      <div className="text-lg font-semibold mb-6">E-Dziekanat</div>
+      <div>
+        <div className="flex justify-evenly items-center text-sm mt-4">
+          <div className="text-lg font-semibold mb-6">{t("app.name")}</div>
+          <button onClick={() => i18n.changeLanguage("pl")}>
+            PL
+          </button>
+          <button onClick={() => i18n.changeLanguage("en")}>
+            EN
+          </button>
+        </div>
+      </div>
 
       <nav className="flex flex-col gap-2">
+<<<<<<< HEAD
         <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/">Home</Link>
         <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/profile">Profile</Link>
         <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/creator">Form Creator</Link>
         <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/payment">Payments</Link>
+=======
+        <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/">{t("navigation.home")}</Link>
+        <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/profile">{t("navigation.profile")}</Link>
+        <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/form">{t("navigation.form")}</Link>
+        <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/forms">{t("navigation.forms")}</Link>
+        <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/creator">{t("navigation.formCreator")}</Link>
+>>>>>>> czarek
       </nav>
 
       <button
@@ -33,7 +53,7 @@ const Sidebar = () => {
           }).catch(err => console.log('Error logging out user:', err));
         }}
       >
-        Logout
+        {t("navigation.logout")}
       </button>
     </aside>
   );
@@ -42,6 +62,7 @@ const Sidebar = () => {
 
 const TopBar = () => {
  const { filterId, setFilterId } = useFilter();
+ const { t } = useTranslation();
 
 const baseClass = "px-3 py-1.5 rounded-full text-sm";
 const getClass = (number: number) =>
@@ -52,17 +73,17 @@ const getClass = (number: number) =>
  return (
   <div className="flex items-center justify-between mb-4">
     <input
-      placeholder="Search..."
+      placeholder={t("common.search")}
       className="w-1/3 px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-300"
     />
 
     <div className="flex gap-2">
-      <button className={getClass(-1)} onClick={() => setFilterId(-1)}>Wszystkie {filterId === -1 && "✓"}  </button>
-      <button className={getClass(0)} onClick={() => setFilterId(0)}> Zaakceptowane {filterId === 0 && "✓"} </button>
-      <button className={getClass(1)} onClick={() => setFilterId(1)}>Oczekujące {filterId === 1 && "✓"}  </button>
-      <button className={getClass(2)} onClick={() => setFilterId(2)}>Odrzucone {filterId === 2 && "✓"} </button>
-      <button className={getClass(3)} onClick={() => setFilterId(3)}>Niewysłane {filterId === 3 && "✓"}  </button>
-      <button className={getClass(4)} onClick={() => setFilterId(4)}>Wymagające aktualizacji {filterId === 4 && "✓"}  </button>
+      <button className={getClass(-1)} onClick={() => setFilterId(-1)}>{t("filters.all")} {filterId === -1 && "✓"}  </button>
+      <button className={getClass(0)} onClick={() => setFilterId(0)}>{t("filters.accepted")} {filterId === 0 && "✓"} </button>
+      <button className={getClass(1)} onClick={() => setFilterId(1)}>{t("filters.pending")} {filterId === 1 && "✓"}  </button>
+      <button className={getClass(2)} onClick={() => setFilterId(2)}>{t("filters.rejected")} {filterId === 2 && "✓"} </button>
+      <button className={getClass(3)} onClick={() => setFilterId(3)}>{t("filters.unsent")} {filterId === 3 && "✓"}  </button>
+      <button className={getClass(4)} onClick={() => setFilterId(4)}>{t("filters.requiresUpdate")} {filterId === 4 && "✓"}  </button>
     </div>
   </div>
 );

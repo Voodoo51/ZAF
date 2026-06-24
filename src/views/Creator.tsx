@@ -1,6 +1,8 @@
 import { use, useState } from "react"
+import { useTranslation } from "react-i18next";
 
 export const CreatorView = () => {
+    const { t } = useTranslation();
     class InputObject {
         id: number = 0;
         label: string = "";
@@ -84,22 +86,22 @@ export const CreatorView = () => {
         if (response.ok) {
             window.location.href = "/";
         } else {
-            console.error("Failed to save form");
+            console.error(t("errors.saveForm"));
         }
     } catch (error) {
-        console.error("Error while saving form:", error);
+        console.error(t("errors.saveFormUnexpected"), error);
     }
 };
     return (
     <div className="min-h-screen py-10 flex items-start justify-center bg-gray-50 px-4">
         <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-6xl">
             <h1 className="text-3xl font-semibold text-center mb-8">
-                Nazwa formularza
+                {t("creator.title")}
             </h1>
 
             <div className="flex justify-center mb-10">
                 <input
-                    placeholder="Podaj nazwę formularza"
+                    placeholder={t("creator.formNamePlaceholder")}
                     onChange={(e) => setFormTitle(e.target.value)}
                     className="w-full max-w-md px-4 py-3 border border-gray-300 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-300"
                     autoFocus
@@ -109,19 +111,19 @@ export const CreatorView = () => {
             {/* Headers */}
             <div className="grid grid-cols-4 gap-4 mb-3 px-1">
                 <h3 className="font-semibold text-sm">
-                    Nazwa pola
+                    {t("creator.fieldName")}
                 </h3>
 
                 <h3 className="font-semibold text-sm">
-                    Podpowiedź
+                    {t("creator.fieldPlaceholder")}
                 </h3>
 
                 <h3 className="font-semibold text-sm">
-                    Ograniczenie
+                    {t("creator.fieldRestriction")}
                 </h3>
 
                 <h3 className="font-semibold text-sm text-center">
-                    Usuń
+                    {t("creator.remove")}
                 </h3>
             </div>
 
@@ -137,7 +139,7 @@ export const CreatorView = () => {
                                 onChange={(e) => changeValue(e, item.id)}
                                 value={item.label}
                                 type="text"
-                                placeholder="Nazwa pola"
+                                placeholder={t("creator.fieldNamePlaceholder")}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                             />
 
@@ -145,7 +147,7 @@ export const CreatorView = () => {
                                 onChange={(e) => changePlaceholder(e, item.id)}
                                 value={item.placeholder}
                                 type="text"
-                                placeholder="Podpowiedź"
+                                placeholder={t("creator.hintPlaceholder")}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                             />
 
@@ -154,11 +156,11 @@ export const CreatorView = () => {
                                 onChange={(e) => changeType(e, item.id)}
                                 value={item.type}
                             >
-                                <option value="none">Brak</option>
-                                <option value="phoneNumber">Nr telefonu</option>
-                                <option value="album">Nr albumu</option>
-                                <option value="pesel">PESEL</option>
-                                <option value="email">Email</option>
+                                <option value="none">{t("creator.none")}</option>
+                                <option value="phoneNumber">{t("creator.phoneNumber")}</option>
+                                <option value="album">{t("creator.album")}</option>
+                                <option value="pesel">{t("creator.pesel")}</option>
+                                <option value="email">{t("creator.email")}</option>
                             </select>
 
                             <div className="flex justify-center">
@@ -187,7 +189,7 @@ export const CreatorView = () => {
                     onClick={handleSave}
                     className="px-5 py-3 rounded-lg text-white bg-[rgb(63,152,255)] hover:opacity-90 transition"
                 >
-                    Stwórz formularz
+                    {t("creator.createForm")}
                 </button>
             </div>
         </div>
