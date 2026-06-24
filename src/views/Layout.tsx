@@ -28,7 +28,7 @@ const Sidebar = () => {
         <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/form">{t("navigation.form")}</Link>
         <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/forms">{t("navigation.forms")}</Link>
         <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/creator">{t("navigation.formCreator")}</Link>
-        <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/payment">t("navigation.payments")</Link>
+        <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/payment">{t("navigation.payments")}</Link>
       </nav>
 
       <button

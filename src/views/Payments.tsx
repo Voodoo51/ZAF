@@ -14,12 +14,12 @@ type TPayment = {
 };
 
 export const PaymentsView = () => {
-    const { t } = useTranslation();
-  const { user } = useAppContext();
-
+    const { user } = useAppContext();
     const [payments, setPayments] = useState<TPayment[]>([]);
     const [loading, setLoading] = useState(true);
-    
+    const { t } = useTranslation();
+    const paymentsWord = [t("paymentStatus.unpaid"), t("paymentStatus.pending"), t("paymentStatus.paid"), t("paymentStatus.cancelled")];
+
     useEffect(() => {
         console.log(`http://localhost:8080/payment/all/${user?.id}`);
         fetch(`http://localhost:8080/payment/all/${user?.id}`, {
@@ -85,7 +85,7 @@ export const PaymentsView = () => {
                                 </h2>
 
                                 <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm">
-                                    {payment.paymentStatus?.name}
+                                    {paymentsWord[payment.paymentStatus?.id]}
                                 </span>
                             </div>
 
