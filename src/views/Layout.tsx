@@ -22,18 +22,13 @@ const Sidebar = () => {
       </div>
 
       <nav className="flex flex-col gap-2">
-<<<<<<< HEAD
-        <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/">Home</Link>
-        <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/profile">Profile</Link>
-        <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/creator">Form Creator</Link>
-        <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/payment">Payments</Link>
-=======
+
         <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/">{t("navigation.home")}</Link>
         <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/profile">{t("navigation.profile")}</Link>
         <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/form">{t("navigation.form")}</Link>
         <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/forms">{t("navigation.forms")}</Link>
         <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/creator">{t("navigation.formCreator")}</Link>
->>>>>>> czarek
+        <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/payment">t("navigation.payments")</Link>
       </nav>
 
       <button
