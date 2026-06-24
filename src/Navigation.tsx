@@ -7,6 +7,7 @@ import { LoginView } from "./views/Login";
 import { ProfileView } from "./views/Profile";
 import { FormView } from "./views/Form";
 import { CreatorView } from "./views/Creator";
+import { PaymentsView } from "./views/Payments";
 
 const Protected = ({ children }: { children: ReactNode }) => {
   const { user } = useAppContext();
@@ -23,6 +24,7 @@ export const Nav = () =>{
           <Route path="/profile" element={<Protected><ProfileView /></Protected>} />
           <Route path="/form/:templateId" element={<Protected><FormView /></Protected>} />
           <Route path="/creator" element={<Protected><CreatorView/></Protected>} />
+          <Route path="/payment" element={<Protected><PaymentsView/></Protected>} />
         </Routes>
       </BrowserRouter>
   );
