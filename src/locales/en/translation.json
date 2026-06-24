@@ -1,0 +1,82 @@
+{
+  "app": {
+    "name": "E-Dean's Office"
+  },
+
+  "navigation": {
+    "home": "Home",
+    "profile": "Profile",
+    "form": "Form",
+    "forms": "Forms",
+    "formCreator": "Form Creator",
+    "logout": "Logout"
+  },
+
+  "filters": {
+    "all": "All",
+    "accepted": "Accepted",
+    "pending": "Pending",
+    "rejected": "Rejected",
+    "unsent": "Unsent",
+    "requiresUpdate": "Requires Update"
+  },
+
+  "common": {
+    "search": "Search...",
+    "loading": "Loading...",
+    "submit": "Submit",
+    "create": "Create",
+    "delete": "Delete",
+    "save": "Save"
+  },
+
+  "login": {
+    "title": "E-Dean's Office",
+    "login": "Login",
+    "password": "Password",
+    "rememberPassword": "Remember password",
+    "forgotPassword": "Forgot password?",
+    "signIn": "Sign in",
+    "signInWithGitHub": "Sign in with GitHub",
+    "noAccount": "Don't have an account?",
+    "register": "Register"
+  },
+
+  "profile": {
+    "title": "Profile",
+    "welcome": "Welcome, {{name}} {{surname}}"
+  },
+
+  "home": {
+    "title": "Home"
+  },
+
+  "creator": {
+    "title": "Form Title",
+    "formNamePlaceholder": "Enter form title",
+    "fieldName": "Field name",
+    "fieldPlaceholder": "Placeholder",
+    "fieldRestriction": "Restriction",
+    "remove": "Delete",
+    "fieldNamePlaceholder": "Field name",
+    "hintPlaceholder": "Placeholder",
+    "createForm": "Create Form",
+    "none": "None",
+    "phoneNumber": "Phone Number",
+    "album": "Student ID",
+    "pesel": "PESEL",
+    "email": "Email"
+  },
+
+  "form": {
+    "submit": "Submit"
+  },
+
+  "errors": {
+    "saveForm": "Failed to save form",
+    "saveFormUnexpected": "An error occurred while saving the form",
+    "fetchTemplates": "Error while fetching forms",
+    "logout": "Error while logging out",
+    "userInfo": "Error while fetching user information"
+  }
+}

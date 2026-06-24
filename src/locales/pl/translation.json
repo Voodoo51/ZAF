@@ -1,0 +1,82 @@
+{
+  "app": {
+    "name": "E-Dziekanat"
+  },
+
+  "navigation": {
+    "home": "Strona startowa",
+    "profile": "Profil",
+    "form": "Formularz",
+    "forms": "Formularze",
+    "formCreator": "Kreator formularzy",
+    "logout": "Wyloguj"
+  },
+
+  "filters": {
+    "all": "Wszystkie",
+    "accepted": "Zaakceptowane",
+    "pending": "Oczekujące",
+    "rejected": "Odrzucone",
+    "unsent": "Niewysłane",
+    "requiresUpdate": "Wymagające aktualizacji"
+  },
+
+  "common": {
+    "search": "Szukaj...",
+    "loading": "Ładowanie...",
+    "submit": "Wyślij",
+    "create": "Stwórz",
+    "delete": "Usuń",
+    "save": "Zapisz"
+  },
+
+  "login": {
+    "title": "E-Dziekanat",
+    "login": "Login",
+    "password": "Hasło",
+    "rememberPassword": "Zapamiętaj hasło",
+    "forgotPassword": "Nie pamiętasz hasła?",
+    "signIn": "Zaloguj się",
+    "signInWithGitHub": "Zaloguj się za pomocą GitHub",
+    "noAccount": "Nie masz konta?",
+    "register": "Zarejestruj się"
+  },
+
+  "profile": {
+    "title": "Profil",
+    "welcome": "Witaj, {{name}} {{surname}}"
+  },
+
+  "home": {
+    "title": "Strona startowa"
+  },
+
+  "creator": {
+    "title": "Nazwa formularza",
+    "formNamePlaceholder": "Podaj nazwę formularza",
+    "fieldName": "Nazwa pola",
+    "fieldPlaceholder": "Podpowiedź",
+    "fieldRestriction": "Ograniczenie",
+    "remove": "Usuń",
+    "fieldNamePlaceholder": "Nazwa pola",
+    "hintPlaceholder": "Podpowiedź",
+    "createForm": "Stwórz formularz",
+    "none": "Brak",
+    "phoneNumber": "Nr telefonu",
+    "album": "Nr albumu",
+    "pesel": "PESEL",
+    "email": "Email"
+  },
+
+  "form": {
+    "submit": "Wyślij"
+  },
+
+  "errors": {
+    "saveForm": "Nie udało się zapisać formularza",
+    "saveFormUnexpected": "Wystąpił błąd podczas zapisywania formularza",
+    "fetchTemplates": "Błąd podczas pobierania formularzy",
+    "logout": "Błąd podczas wylogowywania",
+    "userInfo": "Błąd podczas pobierania danych użytkownika"
+  }
+}
