@@ -26,7 +26,8 @@
       "unpaid": "Unpaid",
       "pending": "Pending",
       "paid": "Paid",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "empty": "There are no payments"
     },
 
   "common": {

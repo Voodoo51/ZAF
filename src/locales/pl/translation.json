@@ -26,7 +26,8 @@
       "unpaid": "Niezapłacone",
       "pending": "Płatność w drodze",
       "paid": "Zapłacone",
-      "canceled": "Płatność anulowana"
+      "canceled": "Płatność anulowana",
+      "empty": "Brak płatności"
     },
 
   "common": {

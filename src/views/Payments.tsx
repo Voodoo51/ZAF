@@ -55,7 +55,7 @@ export const PaymentsView = () => {
             <div className="space-y-4">
                 {payments.length === 0 ? (
                     <p className="text-gray-500">
-                        {t("payments.empty")}
+                        {t("paymentStatus.empty")}
                     </p>
                 ) : (
                     payments.map(payment => (
