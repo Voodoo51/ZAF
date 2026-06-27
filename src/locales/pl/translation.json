@@ -26,9 +26,16 @@
       "unpaid": "Niezapłacone",
       "pending": "Płatność w drodze",
       "paid": "Zapłacone",
-      "canceled": "Płatność anulowana",
-      "empty": "Brak płatności"
+      "canceled": "Płatność anulowana"
     },
+
+  "paymentView": {
+      "empty": "Brak płatności",
+      "pay": "Przejdź do płatności",
+      "add": "Dodaj nową płatność",
+      "update": "Zmodyfikuj płatność",
+      "delete": "Usuń płatność"
+  },
 
   "common": {
     "search": "Szukaj...",

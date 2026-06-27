@@ -26,9 +26,16 @@
       "unpaid": "Unpaid",
       "pending": "Pending",
       "paid": "Paid",
-      "cancelled": "Cancelled",
-      "empty": "There are no payments"
+      "cancelled": "Cancelled"
     },
+
+  "paymentView": {
+      "empty": "There are no payments",
+      "pay": "Proceed to payment",
+      "add": "Add new payment",
+      "update": "Update payment",
+      "delete": "Delete payment"
+  },
 
   "common": {
     "search": "Search...",
