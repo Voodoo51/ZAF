@@ -8,6 +8,9 @@ import { ProfileView } from "./views/Profile";
 import { FormView } from "./views/Form";
 import { CreatorView } from "./views/Creator";
 import { PaymentsView } from "./views/Payments";
+import { PropositionListView } from "./views/PropositionList";
+import { PropositionCreatorView } from "./views/PropositionCreator";
+import { PropositionDetailsView } from "./views/PropositionDetails";
 
 const Protected = ({ children }: { children: ReactNode }) => {
   const { user } = useAppContext();
@@ -16,6 +19,7 @@ const Protected = ({ children }: { children: ReactNode }) => {
 };
 
 export const Nav = () =>{
+  const { user } = useAppContext();
   return (
       <BrowserRouter>
         <Routes>
@@ -23,8 +27,13 @@ export const Nav = () =>{
           <Route path="/" element={<Protected><HomeView /></Protected>} />
           <Route path="/profile" element={<Protected><ProfileView /></Protected>} />
           <Route path="/form/:templateId" element={<Protected><FormView /></Protected>} />
-          <Route path="/creator" element={<Protected><CreatorView/></Protected>} />
+          {user?.role !== "student" && (
+            <Route path="/creator" element={<Protected><CreatorView/></Protected>} />
+          )}
           <Route path="/payment" element={<Protected><PaymentsView/></Protected>} />
+          <Route path="/proposition" element={<Protected><PropositionListView/></Protected>} />
+          <Route path="/proposition/create" element={<Protected><PropositionCreatorView/></Protected>} />
+          <Route path="/proposition/:propositionId" element={<Protected><PropositionDetailsView/></Protected>} />
         </Routes>
       </BrowserRouter>
   );

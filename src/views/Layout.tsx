@@ -4,7 +4,7 @@ import { useAppContext, useFilter } from "../App";
 import { useTranslation } from "react-i18next";
 
 const Sidebar = () => {
-  const { setUser } = useAppContext();
+  const { user, setUser } = useAppContext();
   const { i18n, t } = useTranslation();
 
   return (
@@ -22,11 +22,25 @@ const Sidebar = () => {
       </div>
 
       <nav className="flex flex-col gap-2">
+        {user?.role === "student" ? (
+          <>
+              <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/">{t("navigation.home")}</Link>
+              <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/profile">{t("navigation.profile")}</Link>
+              <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/payment">{t("navigation.payments")}</Link>
+              <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/proposition">{t("navigation.proposition")}</Link>
+          </>
+        ) : 
+        
+        (<>
+              <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/">{t("navigation.home")}</Link>
+              <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/profile">{t("navigation.profile")}</Link>
+              <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/creator">{t("navigation.formCreator")}</Link>
+              <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/payment">{t("navigation.payments")}</Link>
+              <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/proposition">{t("navigation.proposition")}</Link>
+  
+        </>)}
 
-        <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/">{t("navigation.home")}</Link>
-        <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/profile">{t("navigation.profile")}</Link>
-        <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/creator">{t("navigation.formCreator")}</Link>
-        <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/payment">{t("navigation.payments")}</Link>
+       
       </nav>
 
       <button

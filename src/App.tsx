@@ -1,17 +1,12 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { BrowserRouter, Routes, Route, Link, Navigate, useNavigate } from "react-router-dom";
 import { Nav } from "./Navigation";
+import type { User } from "./types";
 
 type AppContextType = {
   user: User | null;
   setUser: (user: User | null) => void;
 };
-
-type User = {
-  id: number;
-  name: string | null;
-  surname: string | null;
-}
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 

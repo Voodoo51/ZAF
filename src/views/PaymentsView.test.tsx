@@ -26,7 +26,7 @@ describe("PaymentsView", () => {
     global.fetch = jest.fn(
       () =>
         new Promise(() => {
-          // never resolves
+        
         })
     ) as any;
 
