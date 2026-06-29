@@ -6,6 +6,8 @@ import type { User } from "./types";
 type AppContextType = {
   user: User | null;
   setUser: (user: User | null) => void;
+  search: string;
+  setSearch: (search: string) => void;
 };
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -18,7 +20,8 @@ export const useAppContext = () => {
 
 const AppProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  return <AppContext.Provider value={{ user, setUser }}>{children}</AppContext.Provider>;
+  const [search, setSearch] = useState<string>("");
+  return <AppContext.Provider value={{ user, setUser, search, setSearch }}>{children}</AppContext.Provider>;
 };
 
 type FilterContextType = {

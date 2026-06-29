@@ -1,34 +1,59 @@
 import { use, useState } from "react"
 import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
+import { FormField } from "../types";
+
+
+
+interface LocationState {
+    title: string;
+    fields: FormField[];
+    pdfFile: File | null;
+}
 
 export const CreatorView = () => {
     const { t } = useTranslation();
-    class InputObject {
-        id: number = 0;
-        label: string = "";
-        placeholder: string = "";
-        type: string = "none";
-    }
 
-    const [arr, setArr] = useState([new InputObject]);
-    const [formTitle, setFormTitle] = useState<string>("");
+    const navigate = useNavigate();
+
+    const location = useLocation();
+    const previous = location.state as LocationState | undefined;
+
+    const [arr, setArr] = useState<FormField[]>(
+        previous?.fields ?? []
+    );
+
+    const [formTitle, setFormTitle] = useState<string>(
+        previous?.title ?? ""
+    );
+
+    const [pdfFile, setPdfFile] = useState<File | null>(
+        previous?.pdfFile ?? null
+    );
 
     const addInput = () => {
-        setArr(arr => {
-            const maxId = arr.length
+    setArr(arr => {
+        const maxId = arr.length
             ? Math.max(...arr.map(item => item.id))
             : 0;
 
-            const newInput = new InputObject();
-            newInput.id = maxId + 1;
+        const newInput: FormField = {
+            id: maxId + 1,
+            label: "",
+            placeholder: "",
+            type: "none",
+            page: 1,
+            x: 50,
+            y: 50,
+            fontSize: 12
+        };
 
-            return [
-                ...arr,
-                newInput
-            ];
-        });
-        console.log(arr);
-    };
+        return [
+            ...arr,
+            newInput
+        ];
+    });
+};
 
     const changeValue = (e: React.ChangeEvent<any>, id: number) => {
         e.preventDefault();
@@ -102,6 +127,7 @@ export const CreatorView = () => {
             <div className="flex justify-center mb-10">
                 <input
                     placeholder={t("creator.formNamePlaceholder")}
+                    value={formTitle}
                     onChange={(e) => setFormTitle(e.target.value)}
                     className="w-full max-w-md px-4 py-3 border border-gray-300 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-300"
                     autoFocus
@@ -129,7 +155,7 @@ export const CreatorView = () => {
 
             {/* Inputs */}
             <div className="space-y-4">
-                {arr.map((item: InputObject) => {
+                {arr.map((item: FormField) => {
                     return (
                         <div
                             key={item.id}
@@ -161,6 +187,7 @@ export const CreatorView = () => {
                                 <option value="album">{t("creator.album")}</option>
                                 <option value="pesel">{t("creator.pesel")}</option>
                                 <option value="email">{t("creator.email")}</option>
+                                <option value="date">{t("creator.date")}</option>
                             </select>
 
                             <div className="flex justify-center">
@@ -178,6 +205,32 @@ export const CreatorView = () => {
 
             {/* Bottom buttons */}
             <div className="flex items-center justify-between mt-8">
+                <div>
+                    <input
+                        id="pdf-upload"
+                        type="file"
+                        accept="application/pdf"
+                        className="hidden"
+                        onChange={(e) => {
+                            if (e.target.files?.length) {
+                                setPdfFile(e.target.files[0]);
+                            }
+                        }}
+                    />
+
+                    <label
+                        htmlFor="pdf-upload"
+                        className="px-4 py-2 bg-gray-200 rounded cursor-pointer"
+                    >
+                        Choose PDF
+                    </label>
+
+                    {pdfFile && (
+                        <span className="ml-3">
+                            {pdfFile.name}
+                        </span>
+                    )}
+                </div>
                 <button
                     onClick={addInput}
                     className="px-5 py-3 rounded-lg text-white bg-[rgb(63,152,255)] hover:opacity-90 transition"
@@ -186,7 +239,22 @@ export const CreatorView = () => {
                 </button>
 
                 <button
-                    onClick={handleSave}
+                    //onClick={handleSave}
+                    onClick={() => {
+                        if(pdfFile !== null)
+                        {
+                            navigate("/pdf-mapper", {
+                                state: {
+                                    title: formTitle,
+                                    pdfFile,
+                                    fields: arr
+                                }
+                            });
+                        } else {
+                            alert("No file inserted.");
+                        }
+                       
+                    }}
                     className="px-5 py-3 rounded-lg text-white bg-[rgb(63,152,255)] hover:opacity-90 transition"
                 >
                     {t("creator.createForm")}

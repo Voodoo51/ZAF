@@ -22,15 +22,62 @@ type TFilledFormField = {
 };
 
 interface FormViewState {
+    page?: number;
     templateId?: number;
-    userId?: number;
     sentFormId?: number;
+    userId?: number;
+    name?: string;
+    surname?: string;
 }
+
+const getInputProps = (field: TTemplateField) => {
+    switch (field.type) {
+        case "phoneNumber":
+            return {
+                type: "text",
+                pattern: "[0-9+ ]*",
+                placeholder: field.placeholder || "+48 123 456 789"
+            };
+
+        case "pesel":
+            return {
+                type: "text",
+                pattern: "[0-9]{11}",
+                placeholder: field.placeholder || "12345678901",
+                maxLength: 11
+            };
+
+        case "email":
+            return {
+                type: "email",
+                pattern: "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+                placeholder: field.placeholder || "example@email.com"
+            };
+
+        case "date":
+            return {
+                type: "date"
+            };
+
+        case "album":
+            return {
+                type: "text",
+                pattern: "[0-9]+",
+                placeholder: field.placeholder || "Album number"
+            };
+
+        default:
+            return {
+                type: "text",
+                placeholder: field.placeholder
+            };
+    }
+};
 
 export const FormView = () => {
     const { t } = useTranslation();
     const location = useLocation();
-    const { templateId, userId, sentFormId } = (location.state as FormViewState) ?? {};
+    const { templateId, userId, sentFormId, name, surname, page } = (location.state as FormViewState) ?? {};
     const [template, setTemplate] = useState<TFormTemplate | null>(null);
 
     const { user } = useAppContext();
@@ -41,6 +88,61 @@ export const FormView = () => {
     const [responseText, setResponseText] = useState("");
     const navigate = useNavigate();
     
+        const validateForm = () => {
+    if (!template) return false;
+
+    return template.formFields.every(field => {
+        const value = formData[field.id]?.trim() || "";
+
+        if (!value) {
+            return false;
+        }
+
+        switch (field.type) {
+
+            case "phoneNumber":
+                // Example: +48123456789 or 123456789
+                console.log("PHONENUMBER" +  /^\+?[0-9]{9,15}$/.test(value.replace(/\s/g, "")));
+                return /^\+?[0-9]{9,15}$/.test(value.replace(/\s/g, ""));
+
+
+            case "pesel":
+                console.log("PESEL" + /^\d{11}$/.test(value));
+                return /^\d{11}$/.test(value);
+
+
+            case "email":
+                console.log("MAIL" + /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value));
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
+
+            case "album":
+                console.log("ALBUM" + /^\d+$/.test(value));
+                return /^\d+$/.test(value);
+
+
+            case "date": {
+                const match = value.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+
+                if (!match) return false;
+
+                const [, day, month, year] = match;
+                const date = new Date(`${year}-${month}-${day}`);
+
+                return (
+                    !isNaN(date.getTime()) &&
+                    date.getDate() === Number(day) &&
+                    date.getMonth() + 1 === Number(month) &&
+                    date.getFullYear() === Number(year)
+                );
+            }
+
+            default:
+                return true;
+        }
+    });
+};
+
     useEffect(() => {
         fetch(`http://localhost:8080/form/template?formTemplateId=${templateId}&userId=${userId}`, {
                 credentials: 'include', 
@@ -93,6 +195,11 @@ export const FormView = () => {
 
         if (!template) return;
 
+        if (!validateForm()) {
+                alert("Please fill all fields correctly");
+                return;
+            }
+
         const filledFields: TFilledFormField[] =
             template.formFields.map(field => ({
                 id: field.id,
@@ -117,6 +224,9 @@ export const FormView = () => {
 
         if (response.ok) {
             navigate("/");
+        } else {
+            const error = await response.text();
+            alert(error || "Failed to send form.");
         }
     };
 
@@ -138,7 +248,11 @@ export const FormView = () => {
             }
         ).then(res => {
             if (res.ok) {
-                navigate("/");
+                navigate("/", {
+                    state: {
+                        page: page
+                    }
+                });
             }
         });
 };
@@ -149,8 +263,25 @@ export const FormView = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 p-10 flex justify-center">
+            <div className="w-full max-w-2xl">
+            <button
+                onClick={() => navigate('/', {
+                    state: {
+                            page,
+                        },
+                })}
+                className="
+                    mb-4
+                    flex items-center
+                    text-blue-600
+                    hover:text-blue-800
+                    transition
+                "
+            >
+                ← {t("common.goBack")}
+            </button>
             <div className="bg-white shadow-md rounded-2xl p-8 w-full max-w-2xl">
-                
+           
                 <h1 className="text-3xl font-semibold mb-8 text-center">
                     {template.title}
                 </h1>
@@ -168,16 +299,22 @@ export const FormView = () => {
                                 </label>
 
                                 <input
+                                    {...getInputProps(field)}
                                     type="text"
                                     placeholder={editable ? field.placeholder : ""}
                                     value={formData[field.id] || ""} 
                                     className="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-300"
                                     disabled={!editable}
                                     onChange={(e) =>
-                                        changeValue(
-                                            field.id,
-                                            e.target.value
-                                        )
+                                    {
+                                        const value = e.target.value;
+
+                                        if (field.type === "pesel" && !/^\d*$/.test(value)) return;
+                                        if (field.type === "album" && !/^\d*$/.test(value)) return;
+                                        if (field.type === "phoneNumber" && !/^[0-9+ ]*$/.test(value)) return;
+
+                                        changeValue(field.id, value);
+                                    }
                                     }
                                 />
                             </div>
@@ -198,9 +335,9 @@ export const FormView = () => {
                                 }
                                 className="border rounded p-2 w-full"
                             >
-                                <option value={0}>Accepted</option>
-                                <option value={2}>Declined</option>
-                                <option value={4}>In need of update</option>
+                                <option value={0}>{t("filters.accepted")}</option>
+                                <option value={2}>{t("filters.rejected")}</option>
+                                <option value={4}>{t("filters.requiresUpdate")}</option>
                             </select>
                         </div>
 
@@ -232,7 +369,40 @@ export const FormView = () => {
                         </div>
                     )}
 
+
+
                 {user?.role !== "student" ? (
+                    <>
+                   <button
+                        onClick={()=>{
+                            navigate("/pdf-preview", {
+                                state: {
+                                    templateId: template.id,
+                                    title: template.title,
+                                    fields: template.formFields,
+                                    values: formData,
+                                    userId: userId,
+                                    name: name,
+                                    surname: surname,
+                                }
+                            });
+                        }}
+                        className="
+                            mt-8
+                            w-full
+                            py-3
+                            rounded-lg
+                            border
+                            border-blue-500
+                            text-blue-600
+                            font-medium
+                            hover:bg-blue-50
+                            transition
+                        "
+                        >
+
+                            Preview PDF
+                        </button>
                     <button
                         onClick={updateStatus}
                         className={`
@@ -241,6 +411,7 @@ export const FormView = () => {
                     >
                         {t("form.submit")}
                     </button>
+                    </>
                     )
                 : 
                     (
@@ -261,7 +432,7 @@ export const FormView = () => {
                 
             </div>
 
-           
+            </div>
         </div>
     );
 };

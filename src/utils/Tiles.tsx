@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { FaPlane, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { FaPlane, FaCheckCircle, FaTimesCircle, FaUpload } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { User, UserPublicData } from "../types";
 
@@ -8,6 +8,7 @@ type Tile = {
   templateId: number;
   templateTitle: string;
   statusId: number;
+  sentAt: string | null;
 };
 
 type PrivilegedTile = {
@@ -16,6 +17,7 @@ type PrivilegedTile = {
   templateTitle: string;
   user: UserPublicData;
   statusId: number;
+  sentAt: string;
 };
 
 type PrivilegedTileGroup = {
@@ -23,8 +25,16 @@ type PrivilegedTileGroup = {
   tiles: PrivilegedTile[];
 };
 
+function formatDate(value: string | null) {
+  if(value === null) return;
 
-export const Tiles = ({ tiles, user }: { tiles: Tile[], user: User | null }) => {
+  const d = new Date(value);
+  return `${d.getDate()}.${d.getMonth()}.${d.getFullYear()}: ${d.getHours()}:${d.getMinutes()}`
+}
+
+
+
+export const Tiles = ({ tiles, user, page }: { tiles: Tile[], user: User | null, page: number }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -36,6 +46,8 @@ const getStatusIcon = (status: number) => {
             return FaTimesCircle({ className:"text-red-500" });
           case 0:
             return FaCheckCircle ({className:"text-blue-500" });
+          case 4:
+            return FaUpload ({className:"text-orange-500" });
           default:
             return null;
         }
@@ -77,7 +89,8 @@ const StatusIcon = ({ status }: { status: number }) => {
           onClick={() => navigate(`/form/${tile.templateId}`, {
             state: {
               templateId: tile.templateId,
-              userId: user?.id
+              userId: user?.id,
+              page: page
             }
           })}
           className="flex items-center justify-between px-4 py-3 hover:bg-gray-50 cursor-pointer transition"
@@ -89,7 +102,8 @@ const StatusIcon = ({ status }: { status: number }) => {
             </span>        
           </div>
 
-          {/* RIGHT: status */}
+          {/* CONSIDER HAVING SENT AT IN USER*/}
+          {/* RIGHT: status  <div>{tile.sentAt ?? formatDate(tile.sentAt)}</div> */}
           <div className="flex items-center gap-2">
  <span>{getStatusIcon(tile.statusId)}</span>
    <StatusLabel status={tile.statusId} />
@@ -102,7 +116,7 @@ const StatusIcon = ({ status }: { status: number }) => {
 
 
 //privileged as in accounts with privileges to accept sent forms get this view
-export const PrivilegedTiles = ({ privilegedTiles }: { privilegedTiles: PrivilegedTile[] }) => {
+export const PrivilegedTiles = ({ privilegedTiles, page }: { privilegedTiles: PrivilegedTile[], page: number }) => {
   const groupedTiles: PrivilegedTileGroup[] = Object.values(
     privilegedTiles.reduce<Record<string, PrivilegedTileGroup>>((acc, tile) => {
       if (!acc[tile.templateId]) {
@@ -151,41 +165,49 @@ const StatusLabel = ({ status }: { status: number }) => {
 
   return null;
 };
+// {[...template.formFields].reverse().
+    return (
+    <div className="flex flex-col gap-2">
+      {[...groupedTiles].reverse().map((group) => (
+        <div key={group.title}  className="rounded-md border border-gray-200 overflow-hidden">
+              <h2 className="bg-gray-50 border-l-4 border-blue-500 px-4 py-2 text-base font-bold text-gray-900">
+  {group.title}
+</h2>
+  <div className="divide-y">
 
-  return (
-    <div className="flex flex-col divide-y">
-      {groupedTiles.map((group) => (
-        <div>
-          <h2 className="text-xl font-bold mb-3">
-              {group.title}
-          </h2>
-            {group.tiles.map((tile) => (
-              <div
-                  key={tile.id}
-                 onClick={() => navigate(`/form/${tile.templateId}`, {
-                    state: {
-                      templateId: tile.templateId,
-                      sentFormId: tile.id,
-                      userId: tile.user.id
-                    }
-                  })}               
-                  className="flex items-center justify-between px-4 py-3 hover:bg-gray-50 cursor-pointer transition"
-                >
-                  {/* LEFT: title */}
-                  <div className="flex flex-col">
-                    <span className="font-medium text-gray-900">
-                      {tile.user.name + " " + tile.user.surname}
-                    </span>        
-                  </div>
+          {group.tiles.map((tile) => (
+            <div
+              key={tile.id}
+              onClick={() =>
+                navigate(`/form/${tile.templateId}`, {
+                  state: {
+                    templateId: tile.templateId,
+                    sentFormId: tile.id,
+                    userId: tile.user.id,
+                    name: tile.user.name,
+                    surname: tile.user.surname,
+                    page,
+                  },
+                })
+              }
+              className="flex items-center justify-between px-4 py-2 hover:bg-gray-50 cursor-pointer transition"
+            >
+              <div className="flex flex-col">
+                <span className="text-sm font-medium text-gray-900">
+                  {tile.user.name} {tile.user.surname}
+                </span>
+              </div>
 
-                  {/* RIGHT: status */}
-                  <div className="flex items-center gap-2">
-        <span>{getStatusIcon(tile.statusId)}</span>
-          <StatusLabel status={tile.statusId} />
+              <div className="flex items-center gap-1 text-sm">
+                <div>{formatDate(tile.sentAt)}</div>
+                <span>{getStatusIcon(tile.statusId)}</span>
+                <StatusLabel status={tile.statusId} />
+              </div>
+            </div>
+          ))}
         </div>
         </div>
-        ))}
-      </div>))}
+      ))}
     </div>
   );
 };

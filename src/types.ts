@@ -47,3 +47,23 @@ export type User = {
   role: string;
 }
 
+export type FormFieldType =
+    | "none"
+    | "phoneNumber"
+    | "album"
+    | "pesel"
+    | "email";
+
+export interface FormField {
+    id: number;
+    label: string;
+    placeholder: string;
+    type: FormFieldType;
+
+    // PDF POSITIONING
+    page: number;
+    x: number;
+    y: number;
+    fontSize: number;
+}
+
