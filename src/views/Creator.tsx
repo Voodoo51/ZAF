@@ -19,17 +19,10 @@ export const CreatorView = () => {
     const location = useLocation();
     const previous = location.state as LocationState | undefined;
 
-    const [arr, setArr] = useState<FormField[]>(
-        previous?.fields ?? []
-    );
-
-    const [formTitle, setFormTitle] = useState<string>(
-        previous?.title ?? ""
-    );
-
-    const [pdfFile, setPdfFile] = useState<File | null>(
-        previous?.pdfFile ?? null
-    );
+    const [arr, setArr] = useState<FormField[]>(previous?.fields ?? []);
+    const [formTitle, setFormTitle] = useState<string>(previous?.title ?? "");
+    const [pdfFile, setPdfFile] = useState<File | null>(previous?.pdfFile ?? null );
+    const [pdfError, setPdfError] = useState<number | null>(0);
 
     const addInput = () => {
     setArr(arr => {
@@ -45,7 +38,7 @@ export const CreatorView = () => {
             page: 1,
             x: 50,
             y: 50,
-            fontSize: 12
+            fontSize: 16
         };
 
         return [
@@ -54,6 +47,19 @@ export const CreatorView = () => {
         ];
     });
 };
+
+    const isPasswordProtectedPDF = async (file: File): Promise<boolean> => {
+        const buffer = await file.arrayBuffer();
+        const uint8 = new Uint8Array(buffer);
+
+        // Convert first part of PDF to string
+        const header = new TextDecoder().decode(uint8.slice(0, 1024));
+
+        // Quick heuristic signals
+        const hasEncryptMarker = header.includes("/Encrypt");
+
+        return hasEncryptMarker;
+    };
 
     const changeValue = (e: React.ChangeEvent<any>, id: number) => {
         e.preventDefault();
@@ -204,17 +210,29 @@ export const CreatorView = () => {
             </div>
 
             {/* Bottom buttons */}
-            <div className="flex items-center justify-between mt-8">
-                <div>
+            <div className="flex items-center justify-between mt-8 gap-4">
+                <div className="flex items-center gap-3">
                     <input
                         id="pdf-upload"
                         type="file"
                         accept="application/pdf"
                         className="hidden"
-                        onChange={(e) => {
-                            if (e.target.files?.length) {
-                                setPdfFile(e.target.files[0]);
+                        onChange={async (e) => {
+                            const file = e.target.files?.[0];
+
+                            if (!file) {
+                                setPdfError(3);
+                                return;
                             }
+
+                            if (file.type !== "application/pdf") {
+                                setPdfError(2);
+                                setPdfFile(null);
+                                return;
+                            }
+
+                            setPdfError(null);
+                            setPdfFile(file);
                         }}
                     />
 
@@ -238,9 +256,14 @@ export const CreatorView = () => {
                         </span>
                     )}
                 </div>
+
+                {pdfError == 1 && (<p className="mt-2 text-sm text-red-500"> {t("pdf.noPdfFile")} </p>)}
+                {pdfError == 2 && (<p className="mt-2 text-sm text-red-500"> {t("pdf.notPdfFile")} </p>)}
+                {pdfError == 3 && (<p className="mt-2 text-sm text-red-500"> {t("pdf.unknownError")} </p>)}
+
                 <button
                     onClick={addInput}
-                    className="px-5 py-3 rounded-lg text-white bg-[rgb(63,152,255)] hover:opacity-90 transition"
+                    className="px-6 py-3 rounded-xl text-white bg-[rgb(63,152,255)] hover:opacity-90 transition font-medium shadow-sm"
                 >
                     +
                 </button>
@@ -250,6 +273,8 @@ export const CreatorView = () => {
                     onClick={() => {
                         if(pdfFile !== null)
                         {
+                            setPdfError(0);
+
                             navigate("/pdf-mapper", {
                                 state: {
                                     title: formTitle,
@@ -258,7 +283,8 @@ export const CreatorView = () => {
                                 }
                             });
                         } else {
-                            alert("No file inserted.");
+                            setPdfError(1);
+                            return;
                         }
                        
                     }}

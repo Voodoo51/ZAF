@@ -37,7 +37,7 @@ export const FieldSidebar = ({
 
   return (
     <div className="w-72 h-screen overflow-auto border-r bg-white p-4">
-      <h2 className="mb-4 text-xl font-bold">Fields</h2>
+      <h2 className="mb-4 text-xl font-bold">{t("pdf.fields")}</h2>
 
       {fields.map((field) => (
         <button
@@ -53,7 +53,7 @@ export const FieldSidebar = ({
 
       {selected && (
         <div className="mt-6 space-y-4 border-t pt-4">
-          <h3 className="font-bold">Selected field</h3>
+          <h3 className="font-bold">{t("pdf.selectedField")}</h3>
 
           <div>
             <label>{t("pdf.fontSize")}</label>

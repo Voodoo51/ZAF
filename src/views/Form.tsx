@@ -342,7 +342,7 @@ export const FormView = () => {
                         </div>
 
                         <div>
-                            <label>Response</label>
+                            <label>{t("form.response")}</label>
 
                             <textarea
                                 value={responseText}
@@ -360,7 +360,7 @@ export const FormView = () => {
                     {user?.role === "student" && responseText && (
                         <div className="mt-8">
                             <h2 className="font-semibold mb-2">
-                                Response
+                                {t("form.response")}
                             </h2>
 
                             <div className="border rounded-lg p-4 bg-gray-50">

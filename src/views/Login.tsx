@@ -73,8 +73,8 @@ export const LoginView = () => {
         <div className="absolute top-4 right-4 flex gap-2">
           <button
             onClick={() => i18n.changeLanguage("pl")}
-            className={`text-2xl transition hover:scale-110 ${
-              i18n.language === "pl" ? "opacity-100" : "opacity-40"
+            className={`text-2xl rounded-[4px] border-2 transition hover:scale-110 ${
+              i18n.language === "pl" ? "border-blue-500" : "border-transparent opacity-50 hover:opacity-100"
             }`}
             title="Polski"
           >
@@ -83,8 +83,8 @@ export const LoginView = () => {
 
           <button
             onClick={() => i18n.changeLanguage("en")}
-            className={`text-2xl transition hover:scale-110 ${
-              i18n.language === "en" ? "opacity-100" : "opacity-40"
+            className={`text-2xl rounded-[4px] border-2 transition hover:scale-110 ${
+              i18n.language === "en" ? "border-blue-500" : "border-transparent opacity-50 hover:opacity-100"
             }`}
             title="English"
           >

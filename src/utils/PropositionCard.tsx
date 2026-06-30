@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import type { TProposition } from "../types";
+import { useTranslation } from "react-i18next";
 
 type Props = {
     proposition: TProposition;
@@ -8,6 +9,8 @@ type Props = {
 export const PropositionCard = ({
     proposition
 }: Props) => {
+
+    const { t } = useTranslation();
 
     return (
         <Link
@@ -36,7 +39,7 @@ export const PropositionCard = ({
 
             {proposition.files.length > 0 && (
                 <div className="mt-4 text-sm text-gray-500">
-                    📎 {proposition.files.length} attachments
+                    📎 {proposition.files.length} {t("common.attachements")}
                 </div>
             )}
         </Link>

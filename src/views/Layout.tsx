@@ -11,17 +11,43 @@ const Sidebar = () => {
 
   return (
     <aside className="sticky top-0 h-screen w-64 bg-white border-r border-gray-200 p-4 flex flex-col overflow-y-auto">
-      <div>
-        <div className="flex justify-evenly items-center text-sm mt-4">
-          <div className="text-lg font-semibold mb-6">{t("app.name")}</div>
-          <button onClick={() => i18n.changeLanguage("pl")}>
-            PL
-          </button>
-          <button onClick={() => i18n.changeLanguage("en")}>
-            EN
-          </button>
-        </div>
+      <div className="flex items-center justify-between mt-4 mb-6">
+      {/* App name */}
+      <div className="text-lg font-semibold">
+        {t("app.name")}
       </div>
+
+      {/* Language switcher */}
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => i18n.changeLanguage("pl")}
+          className={`w-8 h-5 overflow-hidden rounded-[4px] border-2 transition
+            ${i18n.language === "pl" ? "border-blue-500" : "border-transparent opacity-50 hover:opacity-100"}
+          `}
+          title="Polski"
+        >
+          <img
+            src={plFlag}
+            alt="PL"
+            className="w-full h-full object-cover"
+          />
+        </button>
+
+        <button
+          onClick={() => i18n.changeLanguage("en")}
+          className={`w-8 h-5 overflow-hidden rounded-[4px] border-2 transition
+            ${i18n.language === "en" ? "border-blue-500" : "border-transparent opacity-50 hover:opacity-100"}
+          `}
+          title="English"
+        >
+          <img
+            src={enFlag}
+            alt="EN"
+            className="w-full h-full object-cover"
+          />
+        </button>
+      </div>
+    </div>
 
       <nav className="flex flex-col gap-2">
         {user?.role === "student" ? (
@@ -37,7 +63,6 @@ const Sidebar = () => {
               <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/">{t("navigation.home")}</Link>
               <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/profile">{t("navigation.profile")}</Link>
               <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/creator">{t("navigation.formCreator")}</Link>
-              <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/payment">{t("navigation.payments")}</Link>
               <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/proposition">{t("navigation.proposition")}</Link>
               <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/register">{t("navigation.register")}</Link>
               <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/users">{t("navigation.users")}</Link>

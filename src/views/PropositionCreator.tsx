@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../App";
+import { useTranslation } from "react-i18next";
 
 export const PropositionCreatorView = () => {
     const navigate = useNavigate();
-    
+    const { t } = useTranslation();
     const { user } = useAppContext();
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -46,18 +47,18 @@ export const PropositionCreatorView = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex justify-center p-8">
+        <div className="flex justify-center p-8">
             <div className="bg-white rounded-2xl shadow-md p-8 w-full max-w-3xl">
 
                 <h1 className="text-3xl font-semibold mb-8">
-                    New proposition
+                    {t("proposition.newProposition")}
                 </h1>
 
                 <div className="space-y-6">
 
                     <div>
                         <label className="block mb-2 font-medium">
-                            Title
+                            {t("proposition.title")}
                         </label>
 
                         <input
@@ -69,7 +70,7 @@ export const PropositionCreatorView = () => {
 
                     <div>
                         <label className="block mb-2 font-medium">
-                            Description
+                            {t("proposition.description")}
                         </label>
 
                         <textarea
@@ -84,16 +85,37 @@ export const PropositionCreatorView = () => {
 
                     <div>
                         <label className="block mb-2 font-medium">
-                            Attach files
+                            {t("proposition.attachFiles")}
                         </label>
 
                         <input
                             type="file"
                             multiple
                             onChange={e =>
-                                setFiles(
-                                    Array.from(e.target.files || [])
-                                )
+                            ()=>{
+                                const MAX_FILE_SIZE = 10 * 1024 * 1024;
+                                const MAX_TOTAL_SIZE = 50 * 1024 * 1024;
+
+                                const selected = Array.from(e.target.files || []);
+
+                                let totalSize = 0;
+
+                                for (const file of selected) {
+                                    if (file.size > MAX_FILE_SIZE) {
+                                        alert(`${file.name} exceeds 10 MB.`);
+                                        return;
+                                    }
+
+                                    totalSize += file.size;
+                                }
+
+                                if (totalSize > MAX_TOTAL_SIZE) {
+                                    alert("The total size of selected files exceeds 50 MB.");
+                                    return;
+                                }
+
+                                setFiles(selected);
+                                }
                             }
                         />
                     </div>
@@ -112,7 +134,7 @@ export const PropositionCreatorView = () => {
                         onClick={submit}
                         className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg"
                     >
-                        Send proposition
+                        {t("proposition.sendProposition")}
                     </button>
 
                 </div>

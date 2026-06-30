@@ -7,6 +7,43 @@ import { useTranslation } from "react-i18next";
 
 const PAGE_SIZE = 10;
 
+const downloadFile = async (url: string) => {
+    try {
+        const response = await fetch(url, {
+            credentials: "include",
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to download file");
+        }
+
+        const blob = await response.blob();
+
+        let fileName = "download";
+        const disposition = response.headers.get("Content-Disposition");
+
+        if (disposition) {
+            const match = disposition.match(/filename="?([^"]+)"?/);
+            if (match) {
+                fileName = match[1];
+            }
+        }
+
+        const blobUrl = window.URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+
+        link.remove();
+        window.URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+        console.error(err);
+    }
+};
+
 export const PropositionDetailsView = () => {
     const { propositionId } = useParams();
     const { user } = useAppContext();
@@ -214,13 +251,16 @@ export const PropositionDetailsView = () => {
 
                         <div className="space-y-1 max-h-24 overflow-y-auto pr-1">
                             {proposition.files.map(file => (
-                                <a
+                                <button
                                     key={file.id}
-                                    href={`http://localhost:8080/files/${file.id}`}
-                                    className="block text-blue-600 underline"
+                                    type="button"
+                                    onClick={() =>
+                                        downloadFile(`http://localhost:8080/proposition/file/${file.id}`)
+                                    }
+                                    className="block text-blue-600 underline text-left"
                                 >
                                     📎 {file.fileName}
-                                </a>
+                                </button>
                             ))}
                         </div>
                     </div>
@@ -262,7 +302,28 @@ export const PropositionDetailsView = () => {
                         type="file"
                         multiple
                         onChange={e =>
-                            setFiles(Array.from(e.target.files || []))
+                             () => {
+                               const MAX_FILE_SIZE = 10 * 1024 * 1024;
+                                const MAX_TOTAL_SIZE = 50 * 1024 * 1024;
+
+                                const selected = Array.from(e.target.files || []);
+
+                                let totalSize = 0;
+
+                                for (const file of selected) {
+                                    if (file.size > MAX_FILE_SIZE) {
+                                        alert(t("common.fileTooBig"));
+                                        return;
+                                    }
+
+                                    totalSize += file.size;
+                                }
+
+                                if (totalSize > MAX_TOTAL_SIZE) {
+                                    alert(t("common.filesTooBig"));
+                                    return;
+                                }
+                             }
                         }
                     />
 

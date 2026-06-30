@@ -7,11 +7,25 @@
     "download": "Pobierz PDF",
     "preview": "Podgląd PDF",
     "fontSize": "Rozmiar czcionki",
+    "fields": "Pola",
+    "selectedField": "Wybrane pole",
     "page": "Strona",
     "position": "Pozycja",
     "choosePdf": "Wybierz plik PDF",
     "renderingPdf": "Renderowanie pliku PDF...",
-    "noPdfFile": "Nie wybrano pliku PDF"
+    "noPdfFile": "Nie wybrano pliku PDF",
+    "notPdfFile": "Plik nie jest plikiem PDF",
+    "unknownError": "Nieznany błąd przetwarzania pliku PDF"
+  },
+
+  "proposition": {
+    "myPropositions": "Moje wnioski",
+    "receivedPropositions": "Odebrane wnioski",
+    "newProposition": "Nowy wniosek",
+    "title": "Tytuł",
+    "description": "Opis",
+    "attachFiles": "Załącz pliki",
+    "sendProposition": "Wyślij wniosek"
   },
 
   "navigation": {
@@ -40,7 +54,9 @@
     "unpaid": "Niezapłacone",
     "pending": "Płatność w drodze",
     "paid": "Zapłacone",
-    "canceled": "Płatność anulowana"
+    "canceled": "Płatność anulowana",
+    "initiated": "Zainicjonowane",
+    "failed": "Niepowodzenie"
   },
 
   "paymentView": {
@@ -68,7 +84,9 @@
     "confirm": "Zatwierdź",
     "goBack": "Powrót",
     "writeMessage": "Napisz wiadomość...",
-    "attachements": "Załączniki"
+    "attachements": "Załączniki",
+    "fileTooBig": "Plik przekracza 10MB.",
+    "filesTooBig": "Suma plików nie może przekraczać 50 MB."
   },
 
   "login": {
@@ -137,7 +155,8 @@
   },
 
   "form": {
-    "submit": "Wyślij"
+    "submit": "Wyślij",
+    "respone": "Odpowiedź"
   },
 
   "errors": {

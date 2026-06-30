@@ -18,12 +18,14 @@ export const PaymentsView = () => {
     const [payments, setPayments] = useState<TPayment[]>([]);
     const [loading, setLoading] = useState(true);
     const { t } = useTranslation();
-    const paymentsWord = [t("paymentStatus.unpaid"), t("paymentStatus.pending"), t("paymentStatus.paid"), t("paymentStatus.cancelled")];
+    const paymentsWord = [t("paymentStatus.unpaid"), t("paymentStatus.pending"), t("paymentStatus.paid"), t("paymentStatus.cancelled"), t("paymentStatus.initiated"), t("paymentStatus.failed")];
     const paymentStatusStyles = [
         "bg-yellow-100 text-yellow-700",
         "bg-blue-100 text-blue-700",
         "bg-green-100 text-green-700",
-        "bg-red-100 text-red-700"
+        "bg-red-100 text-red-700",
+        "bg-blue-100 text-blue-700",
+        "bg-green-100 text-green-700"
     ];
 
     useEffect(() => {

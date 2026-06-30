@@ -14,13 +14,16 @@ import {
     PdfPageImage,
     renderPdf
 } from "../utils/PdfRenderer";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 
 interface Props {
-
+    
     pdfFile: File;
     fields: FormField[];
 
+    title?: string;
     preview?: boolean;
     values?: Record<number,string>;
 
@@ -47,23 +50,30 @@ interface Props {
             height:number;
         } | null>
     >;
+
+    setPdfError?: React.Dispatch<
+            React.SetStateAction<number>
+    >;
 }
 
 
 export const PdfCanvas = ({
     pdfFile,
     fields,
+    title,
     preview,
     values,
     setFields,
     selectedId,
     setSelectedId,
     setPageCount,
-    setPageSize
+    setPageSize,
+    setPdfError
 }: Props) => {
-
+    const navigate = useNavigate();
     const [pages, setPages] = useState<PdfPageImage[]>([]);
     const textRefs = useRef<{[key:number]: Konva.Text}>({});
+    const { t } = useTranslation();
 
     useEffect(() => {
         renderPdf(pdfFile)
@@ -76,6 +86,17 @@ export const PdfCanvas = ({
                         height: result[0].height
                     });
                 }
+            }).catch(() => {
+                if(setPdfError) {
+                    setPdfError(4);
+                    navigate("/creator", {
+                        state:{
+                            title: title,
+                            fields: fields,
+                            pdfFile: pdfFile
+                        }
+                    });
+                }
             });
     }, [pdfFile]);
 
@@ -83,7 +104,7 @@ export const PdfCanvas = ({
     if (!pages.length) {
         return (
             <div>
-                Rendering PDF...
+                {t("pdf.renderingPdf")}
             </div>
         );
     }
@@ -202,12 +223,11 @@ export const PdfCanvas = ({
                                 wrap="none"
                                 ellipsis={false}
                                 draggable={!preview}
+                                
                                 onClick={()=>{
-
                                     if(!preview){
                                         setSelectedId?.(field.id);
                                     }
-
                                 }}
 
 
@@ -243,6 +263,13 @@ export const PdfCanvas = ({
 
                                 };
                                 }}
+
+                                onDragStart={()=>{
+                                        if(!preview){
+                                            setSelectedId?.(field.id);
+                                        }
+                                    }
+                                }
 
                                 onDragEnd={(e)=>{
                                     if(preview) return;

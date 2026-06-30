@@ -7,11 +7,25 @@
     "download": "Download PDF",
     "preview": "Preview PDF",
     "fontSize": "Font Size",
+    "fields": "Fields",
+    "selectedField": "Selected field",
     "page": "Page",
     "position": "Position",
     "choosePdf": "Choose PDF",
     "renderingPdf": "Rendering PDF...",
-     "noPdfFile": "No PDF inserted"
+    "noPdfFile": "No PDF inserted",
+    "notPdfFile": "File is not PDF",
+    "unknownError": "Unknown PDF processing error"
+  },
+
+  "proposition": {
+    "myPropositions": "My propositions",
+    "receivedPropositions": "Received propositions",
+    "newProposition": "New proposition",
+    "title": "Title",
+    "description": "Description",
+    "attachFiles": "Attach Files",
+    "sendProposition": "Send proposition"
   },
 
   "navigation": {
@@ -40,7 +54,9 @@
     "unpaid": "Unpaid",
     "pending": "Pending",
     "paid": "Paid",
-    "cancelled": "Cancelled"
+    "cancelled": "Cancelled",
+    "initiated": "Initiated",
+    "failed": "Failed"
   },
 
   "paymentView": {
@@ -68,7 +84,9 @@
     "confirm": "Confirm",
     "goBack": "Go back",
     "writeMessage": "Write a message...",
-    "attachements": "Attachements"
+    "attachements": "Attachements",
+    "fileTooBig": "File exceeds 10MB.",
+    "filesTooBig": "The total size of selected files exceeds 50 MB."
   },
 
   "login": {
@@ -137,7 +155,8 @@
   },
 
   "form": {
-    "submit": "Submit"
+    "submit": "Submit",
+    "respone": "Respone"
   },
 
   "errors": {

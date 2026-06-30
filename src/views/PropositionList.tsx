@@ -59,7 +59,7 @@ export const PropositionListView = () => {
 
             <div className="flex justify-between mb-6">
                 <h1 className="text-3xl font-bold">
-                    {user?.role === "student" ? "My propositions" : "All propositions"}
+                    {user?.role === "student" ? t("proposition.myPropositions") : t("proposition.receivedPropositions") }
                 </h1>
 
                 {user?.role === "student" && (
@@ -67,7 +67,7 @@ export const PropositionListView = () => {
                         to="/proposition/create"
                         className="bg-blue-600 text-white px-4 py-2 rounded-lg"
                     >
-                        New proposition
+                        {t("proposition.newProposition")}
                     </Link>
                 )}
             </div>
@@ -91,7 +91,7 @@ export const PropositionListView = () => {
                 </button>
 
                 <span className="px-4 py-2">
-                    {page + 1} / {totalPages}
+                    {page + 1} / {totalPages === 0 ? 1 : totalPages}
                 </span>
 
                 <button
