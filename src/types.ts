@@ -12,7 +12,7 @@ export type TUserPublicData = {
 
 export type TProposition = {
     id: number;
-    user: TUserPublicData;
+    user: UserPublicData;
     createdAt: string;
     title: string;
     description: string;

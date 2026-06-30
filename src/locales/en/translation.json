@@ -68,7 +68,8 @@
     "confirmDelete": "Do you really want to delete this payment?",
     "title": "Payment title",
     "description": "Payment description",
-    "userPayments": "Payments of User"
+    "userPayments": "Payments of User",
+    "payOffline": "Paid offline"  
   },
 
   "common": {
@@ -105,7 +106,7 @@
     "title": "Create user's account",
     "name": "Enter users name",
     "surname": "Enter users surname",
-    "login": "Enter users login",
+    "login": "Enter users email",
     "password": "Enter users password",
     "back": "Go back to login page",
     "register": "Create account"
@@ -151,12 +152,13 @@
     "phoneNumber": "Phone Number",
     "album": "Student ID",
     "pesel": "PESEL",
-    "email": "Email"
+    "email": "Email",
+    "date": "Date"
   },
 
   "form": {
     "submit": "Submit",
-    "respone": "Respone"
+    "response": "Response"
   },
 
   "errors": {
@@ -170,7 +172,7 @@
 
   "inputErrors": {
     "emptyPaymentTitle": "There must be a payment title",
-    "emptyPaymentValue": "Payment must have a value",
+    "emptyPaymentValue": "Invalid payment value",
     "emptyPaymentDescription": "There must be a payment description",
     "incorrectEmail": "Incorrect email address",
     "shortPassword": "Password must be at least three characters long",

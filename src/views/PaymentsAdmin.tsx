@@ -58,9 +58,9 @@ export const PaymentsAdminView = () => {
     const validateTitle = (title: string) => title.trim().length > 0;
     const validateDescription = (description: string) =>
         description.trim().length > 0;
-    const validateAmount = (amount: string) => {
-        const value = Number(amount.replace(",", "."));
-        return !isNaN(value) && value > 0;
+    const validateAmount = (amount: string) => { 
+        const value = Number(amount.replace(",", ".")); 
+        return !isNaN(value) && value > 0 && value < 1001; 
     };
 
     const [userData, setUserData] = useState<{
@@ -176,19 +176,56 @@ export const PaymentsAdminView = () => {
         }
     };
 
-    const deletePayment = (id: number) => {
+    const deletePayment = async (id: number) => {
         try {
-            fetch(`http://localhost:8080/payment/delete/${id}`, {
-            method: 'DELETE',
-            mode: 'cors',
-            credentials: 'include',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({id: id}),
+            const response = await fetch(`http://localhost:8080/payment/delete/${id}`, {
+                method: "DELETE",
+                mode: "cors",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
             });
+
+            if (!response.ok) {
+                throw new Error(`Failed to delete payment. Status: ${response.status}`);
+            }
+
+            setPayments(prev =>
+                prev.filter(payment => payment.id !== id)
+            );
+
+
+            console.log("Payment deleted successfully.");
         } catch (error) {
-            console.error("Coś poszło nie tak w deletePayment", error);
+            console.error("Coś poszło nie tak w deletePayment:", error);
+        }
+    };
+
+    const payOffline = async (id: number) => {
+        try {
+            const response = await fetch(
+                `http://localhost:8080/payment/payOffline/${id}`,
+                {
+                    method: "PUT",
+                    mode: "cors",
+                    credentials: "include",
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Failed to mark payment as paid");
+            }
+
+            const updatedPayment = await response.json();
+
+            setPayments(prev =>
+                prev.map(payment =>
+                    payment.id === id ? updatedPayment : payment
+                )
+            );
+        } catch (err) {
+            console.error(err);
         }
     };
 
@@ -528,8 +565,16 @@ export const PaymentsAdminView = () => {
                                     {payment.description}
                                 </p>
                             )}
-
+                            
                             <div className="flex justify-end mt-4">
+                                {payment.paymentStatus?.id === 0 && (
+                                    <button
+                                        className="px-3 py-1 m-2 rounded-lg bg-green-600 text-white hover:opacity-90"
+                                        onClick={() => payOffline(payment.id)}
+                                    >
+                                        {t("paymentView.payOffline")}
+                                    </button>
+                                )}
                                 {paymentToEdit === payment.id ? (
                                     <>
                                         <button

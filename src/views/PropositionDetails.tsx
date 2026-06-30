@@ -45,6 +45,8 @@ const downloadFile = async (url: string) => {
 };
 
 export const PropositionDetailsView = () => {
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
     const { propositionId } = useParams();
     const { user } = useAppContext();
     const { t } = useTranslation();
@@ -61,11 +63,9 @@ export const PropositionDetailsView = () => {
 
     const chatRef = useRef<HTMLDivElement | null>(null);
     const prevScrollHeight = useRef(0);
+    const shouldRestoreScroll = useRef(false);
     const isInitialLoad = useRef(true);
 
-    // -----------------------------
-    // LOAD PROPOSITION + RESET
-    // -----------------------------
     useEffect(() => {
         if (!propositionId) return;
 
@@ -90,16 +90,15 @@ export const PropositionDetailsView = () => {
         }
     };
 
-    // -----------------------------
-    // LOAD MESSAGES (FIXED SCROLL)
-    // -----------------------------
     const loadMessages = async (pageNumber: number, replace = false) => {
         if (loadingMore || !propositionId) return;
 
-        const el = chatRef.current;
+            const el = chatRef.current;
 
-        // SAVE scroll height BEFORE DOM change
-        prevScrollHeight.current = el?.scrollHeight || 0;
+            if (!replace && el) {
+                prevScrollHeight.current = el.scrollHeight;
+                shouldRestoreScroll.current = true;
+            }
 
         setLoadingMore(true);
 
@@ -126,23 +125,32 @@ export const PropositionDetailsView = () => {
         }
     };
 
-    // -----------------------------
-    // RESTORE SCROLL POSITION (FIX JUMP)
-    // -----------------------------
     useEffect(() => {
         const el = chatRef.current;
         if (!el) return;
 
         requestAnimationFrame(() => {
-            if (isInitialLoad.current) {
+
+            // first load -> bottom
+            if (isInitialLoad.current && messages.length > 0) {
                 el.scrollTop = el.scrollHeight;
                 isInitialLoad.current = false;
                 return;
             }
 
-            const newScrollHeight = el.scrollHeight;
-            el.scrollTop = newScrollHeight - prevScrollHeight.current;
+
+            // loading old messages -> keep position
+            if (shouldRestoreScroll.current) {
+                const newScrollHeight = el.scrollHeight;
+
+                el.scrollTop =
+                    newScrollHeight - prevScrollHeight.current;
+
+                shouldRestoreScroll.current = false;
+            }
+
         });
+
     }, [messages]);
 
     // -----------------------------
@@ -153,9 +161,16 @@ export const PropositionDetailsView = () => {
         if (!el) return;
 
         const handleScroll = () => {
-            if (el.scrollTop < 80 && hasMore && !loadingMore) {
-                setPage(p => p + 1);
-            }
+           if (
+                    el.scrollTop < 80 &&
+                    hasMore &&
+                    !loadingMore
+                ) {
+                    setPage(prev => {
+                        if (loadingMore) return prev;
+                        return prev + 1;
+                    });
+                }
         };
 
         el.addEventListener("scroll", handleScroll);
@@ -167,9 +182,6 @@ export const PropositionDetailsView = () => {
         loadMessages(page);
     }, [page]);
 
-    // -----------------------------
-    // SEND MESSAGE
-    // -----------------------------
     const sendMessage = async () => {
         if (!user || !message.trim()) return;
 
@@ -190,6 +202,7 @@ export const PropositionDetailsView = () => {
                 )
             );
 
+            console.log(files);
             files.forEach(file => formData.append("files", file));
 
             const res = await fetch(
@@ -209,7 +222,9 @@ export const PropositionDetailsView = () => {
 
             setMessage("");
             setFiles([]);
-
+            if (fileInputRef.current) {
+                fileInputRef.current.value = "";
+            }
             requestAnimationFrame(() => {
                 chatRef.current?.scrollTo({
                     top: chatRef.current.scrollHeight,
@@ -234,7 +249,7 @@ export const PropositionDetailsView = () => {
 
                 <div className="flex-1">
                     <h1 className="text-2xl font-semibold text-gray-900">
-                        {proposition.title}
+                        {proposition.title + ": " + proposition.user.name + " " + proposition.user.surname}
                     </h1>
 
                     <p className="mt-1 text-gray-600 text-sm leading-relaxed">
@@ -299,10 +314,11 @@ export const PropositionDetailsView = () => {
 
                 <div className="flex justify-between items-center mt-3">
                     <input
+                        ref={fileInputRef}
                         type="file"
                         multiple
-                        onChange={e =>
-                             () => {
+                        onChange={
+                             (e) => {
                                const MAX_FILE_SIZE = 10 * 1024 * 1024;
                                 const MAX_TOTAL_SIZE = 50 * 1024 * 1024;
 
@@ -323,6 +339,8 @@ export const PropositionDetailsView = () => {
                                     alert(t("common.filesTooBig"));
                                     return;
                                 }
+
+                                setFiles(selected);
                              }
                         }
                     />

@@ -369,11 +369,7 @@ export const FormView = () => {
                         </div>
                     )}
 
-
-
-                {user?.role !== "student" ? (
-                    <>
-                   <button
+                    <button
                         onClick={()=>{
                             navigate("/pdf-preview", {
                                 state: {
@@ -401,8 +397,12 @@ export const FormView = () => {
                         "
                         >
 
-                            Preview PDF
+                            {t("pdf.preview")}
                         </button>
+
+                {user?.role !== "student" ? (
+                    <>
+                  
                     <button
                         onClick={updateStatus}
                         className={`

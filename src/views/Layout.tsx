@@ -139,7 +139,7 @@ const TopBar = () => {
 
 export const Layout = ({ children }: { children: ReactNode }) => {
     const location = useLocation();
-    const hideTopBar = location.pathname.includes("/proposition/"); // adjust if needed
+    const hideTopBar = location.pathname.includes("/proposition/") || location.pathname.includes("/creator")  ; // adjust if needed
     const [active, setActive] = useState("all");
 
     return(

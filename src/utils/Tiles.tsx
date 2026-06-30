@@ -29,7 +29,7 @@ function formatDate(value: string | null) {
   if(value === null) return;
 
   const d = new Date(value);
-  return `${d.getDate()}.${d.getMonth()}.${d.getFullYear()}: ${d.getHours()}:${d.getMinutes()}`
+  return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}: ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
 }
 
 
@@ -105,9 +105,9 @@ const StatusIcon = ({ status }: { status: number }) => {
           {/* CONSIDER HAVING SENT AT IN USER*/}
           {/* RIGHT: status  <div>{tile.sentAt ?? formatDate(tile.sentAt)}</div> */}
           <div className="flex items-center gap-2">
- <span>{getStatusIcon(tile.statusId)}</span>
-   <StatusLabel status={tile.statusId} />
-</div>
+            <span>{getStatusIcon(tile.statusId)}</span>
+              <StatusLabel status={tile.statusId} />
+            </div>
         </div>
       ))}
     </div>

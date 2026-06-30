@@ -109,7 +109,7 @@ export const RegisterUserView = () => {
             </svg>
 
             <h3 className="font-semibold text-red-700">
-              {t("errors.validationFailed")}
+              {t("errors.server")}
             </h3>
           </div>
 

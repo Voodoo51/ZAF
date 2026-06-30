@@ -94,14 +94,14 @@ export const UsersView = () => {
                                     <p className="mt-4 text-gray-600">
                                         {user.email}
                                     </p>
-                                    <Link to={`/payments/${user.id}`} className="text-blue-600 hover:underline">
+                                    <Link to={`/payments/${user.id}`} className="block text-blue-600 hover:underline">
                                         {t("users.seePayments")}
                                     </Link>
                                     <button onClick={() => {
                                         setSearch(`${user.name} ${user.surname}`);
                                         navigate("/");
                                     }
-                                    } className="text-blue-600 hover:underline">
+                                    } className="block text-blue-600 hover:underline">
                                         {t("users.seeSentForms")}
                                     </button>
                                 </div>

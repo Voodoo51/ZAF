@@ -68,7 +68,8 @@
     "confirmDelete": "Czy naprawdę chcesz usunąć tę płatność?",
     "title": "Tytuł płatności",
     "description": "Opis płatności",
-    "userPayments": "Płatności użytkownika"    
+    "userPayments": "Płatności użytkownika",
+    "payOffline": "Zapłacono offline"   
   },
 
   "common": {
@@ -105,7 +106,7 @@
     "title": "Utwórz konto użytkownika",
     "name": "Wprowadź imię użytkownika",
     "surname": "Wprowadź nazwisko użytkownika",
-    "login": "Wprowadź login użytkownika",
+    "login": "Wprowadź email użytkownika",
     "password": "Wprowadź hasło użytkownika",
     "back": "Wróć do strony logowania",
     "register": "Utwórz konto"
@@ -151,12 +152,13 @@
     "phoneNumber": "Nr telefonu",
     "album": "Nr albumu",
     "pesel": "PESEL",
-    "email": "Email"
+    "email": "Email",
+    "date": "Data"
   },
 
   "form": {
     "submit": "Wyślij",
-    "respone": "Odpowiedź"
+    "response": "Odpowiedź"
   },
 
   "errors": {
@@ -170,7 +172,7 @@
   
   "inputErrors": {
     "emptyPaymentTitle": "Musisz podać tytuł płatności",
-    "emptyPaymentValue": "Musisz podać wartość płatności",
+    "emptyPaymentValue": "Niepoprawna wartość płatności",
     "emptyPaymentDescription": "Musisz podać opis płatności",
     "incorrectEmail": "Błędny adres email",
     "shortPassword": "Hasło musi zawierać przynajmniej trzy znaki",
