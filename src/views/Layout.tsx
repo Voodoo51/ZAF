@@ -8,7 +8,7 @@ const Sidebar = () => {
   const { i18n, t } = useTranslation();
 
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 p-4 flex flex-col">
+    <aside className="sticky top-0 h-screen w-64 bg-white border-r border-gray-200 p-4 flex flex-col overflow-y-auto">
       <div>
         <div className="flex justify-evenly items-center text-sm mt-4">
           <div className="text-lg font-semibold mb-6">{t("app.name")}</div>
@@ -37,7 +37,8 @@ const Sidebar = () => {
               <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/creator">{t("navigation.formCreator")}</Link>
               <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/payment">{t("navigation.payments")}</Link>
               <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/proposition">{t("navigation.proposition")}</Link>
-  
+              <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/register">{t("navigation.register")}</Link>
+              <Link className="px-3 py-2 rounded-lg hover:bg-gray-100" to="/users">{t("navigation.users")}</Link>
         </>)}
 
        
@@ -100,11 +101,13 @@ export const Layout = ({ children }: { children: ReactNode }) => {
 
     const [active, setActive] = useState("all");
     return(
-  <div className="flex min-h-screen bg-gray-50">
+  <div className="flex h-screen bg-gray-50">
     <Sidebar />
-    <main className="flex-1 p-6">
-      <TopBar/>
-      <div>{children}</div>
+    <main className="flex-1 overflow-y-auto">
+      <div className="p-6">
+        <TopBar/>
+        <div>{children}</div>
+      </div>
     </main>
   </div>
 );
