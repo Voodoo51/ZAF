@@ -29,7 +29,7 @@ export const HomeView = () => {
   const [tiles, setTiles] = useState<StudentSentFormDTO[]>([]);
   const [privilegedTiles, setPrivilegedTiles] = useState<PrivilegedSentFormDTO[]>([]);
   const [page, setPage] = useState(0);
-  const [maxPage, setMaxPage] = useState(0);
+  const [maxPage, setMaxPage] = useState(1);
 
   const isPrivileged = user?.role === "worker" || user?.role === "admin";
 
@@ -125,18 +125,17 @@ export const HomeView = () => {
           <Tiles tiles={filteredTiles} user={user}/>
         )}
 
-        {/* Pagination */}
           <div className="flex justify-center gap-4 mt-6">
             <button
               disabled={page === 0}
               onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
               className="px-4 py-2 border rounded disabled:opacity-50"
             >
-              Previous
+              {t("pagination.previous")}
             </button>
 
             <span className="self-center">
-              Page {page + 1} / {maxPage}
+              {t("pagination.page")} {page + 1} / {maxPage || 1}
             </span>
 
             <button
@@ -146,7 +145,7 @@ export const HomeView = () => {
               }
               className="px-4 py-2 border rounded disabled:opacity-50"
             >
-              Next
+              {t("pagination.next")}
             </button>
           </div>
       </div>
