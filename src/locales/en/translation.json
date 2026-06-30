@@ -10,7 +10,10 @@
     "forms": "Forms",
     "formCreator": "Form Creator",
     "logout": "Logout",
-    "payments": "Payments"
+    "payments": "Payments",
+    "proposition": "Propositions",
+    "register": "Create user",
+    "users": "Users"
   },
 
   "filters": {
@@ -23,18 +26,22 @@
   },
 
  "paymentStatus": {
-      "unpaid": "Unpaid",
-      "pending": "Pending",
-      "paid": "Paid",
-      "cancelled": "Cancelled"
-    },
+    "unpaid": "Unpaid",
+    "pending": "Pending",
+    "paid": "Paid",
+    "cancelled": "Cancelled"
+  },
 
   "paymentView": {
-      "empty": "There are no payments",
-      "pay": "Proceed to payment",
-      "add": "Add new payment",
-      "update": "Update payment",
-      "delete": "Delete payment"
+    "empty": "There are no payments",
+    "pay": "Proceed to payment",
+    "add": "Add new payment",
+    "update": "Update payment",
+    "delete": "Delete payment",
+    "confirmDelete": "Do you really want to delete this payment?",
+    "title": "Payment title",
+    "description": "Payment description",
+    "userPayments": "Payments of User"
   },
 
   "common": {
@@ -43,7 +50,11 @@
     "submit": "Submit",
     "create": "Create",
     "delete": "Delete",
-    "save": "Save"
+    "save": "Save",
+    "no": "No",
+    "yes": "Yes",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
   },
 
   "login": {
@@ -56,6 +67,32 @@
     "signInWithGitHub": "Sign in with GitHub",
     "noAccount": "Don't have an account?",
     "register": "Register"
+  },
+
+  "register": {
+    "title": "Create user's account",
+    "name": "Enter users name",
+    "surname": "Enter users surname",
+    "login": "Enter users login",
+    "password": "Enter users password",
+    "back": "Go back to login page",
+    "register": "Create account"
+  },
+
+  "roles": {
+    "supervisor": "Lecturer",
+    "worker": "Office worker",
+    "student": "Student"
+  },
+
+  "pagination": {
+    "page": "Page",
+    "previous": "Previous",
+    "next": "Next"
+  },
+
+  "users": {
+    "seePayments": "See user payments"
   },
 
   "profile": {
@@ -94,5 +131,15 @@
     "fetchTemplates": "Error while fetching forms",
     "logout": "Error while logging out",
     "userInfo": "Error while fetching user information"
+  },
+
+  "inputErrors": {
+    "emptyPaymentTitle": "There must be a payment title",
+    "emptyPaymentValue": "Payment must have a value",
+    "emptyPaymentDescription": "There must be a payment description",
+    "incorrectEmail": "Incorrect email address",
+    "shortPassword": "Password must be at least three characters long",
+    "capitalName": "Name must start with a capital letter",
+    "capitalSurname": "Surname must start with a capital letter"
   }
 }

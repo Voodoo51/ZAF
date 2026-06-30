@@ -10,7 +10,10 @@
     "forms": "Formularze",
     "formCreator": "Kreator formularzy",
     "logout": "Wyloguj",
-    "payments": "Płatności"
+    "payments": "Płatności",
+    "proposition": "Wnioski",
+    "register": "Utwórz użytkownika",
+    "users": "Użytkownicy"
   },
 
   "filters": {
@@ -23,18 +26,22 @@
   },
 
   "paymentStatus": {
-      "unpaid": "Niezapłacone",
-      "pending": "Płatność w drodze",
-      "paid": "Zapłacone",
-      "canceled": "Płatność anulowana"
-    },
+    "unpaid": "Niezapłacone",
+    "pending": "Płatność w drodze",
+    "paid": "Zapłacone",
+    "canceled": "Płatność anulowana"
+  },
 
   "paymentView": {
-      "empty": "Brak płatności",
-      "pay": "Przejdź do płatności",
-      "add": "Dodaj nową płatność",
-      "update": "Zmodyfikuj płatność",
-      "delete": "Usuń płatność"
+    "empty": "Brak płatności",
+    "pay": "Przejdź do płatności",
+    "add": "Dodaj nową płatność",
+    "update": "Zmodyfikuj płatność",
+    "delete": "Usuń płatność",
+    "confirmDelete": "Czy naprawdę chcesz usunąć tę płatność?",
+    "title": "Tytuł płatności",
+    "description": "Opis płatności",
+    "userPayments": "Płatności użytkownika"
   },
 
   "common": {
@@ -43,7 +50,11 @@
     "submit": "Wyślij",
     "create": "Stwórz",
     "delete": "Usuń",
-    "save": "Zapisz"
+    "save": "Zapisz",
+    "no": "Nie",
+    "yes": "Tak",
+    "cancel": "Anuluj",
+    "confirm": "Zatwierdź"
   },
 
   "login": {
@@ -56,6 +67,32 @@
     "signInWithGitHub": "Zaloguj się za pomocą GitHub",
     "noAccount": "Nie masz konta?",
     "register": "Zarejestruj się"
+  },
+
+  "register": {
+    "title": "Utwórz konto użytkownika",
+    "name": "Wprowadź imię użytkownika",
+    "surname": "Wprowadź nazwisko użytkownika",
+    "login": "Wprowadź login użytkownika",
+    "password": "Wprowadź hasło użytkownika",
+    "back": "Wróć do strony logowania",
+    "register": "Utwórz konto"
+  },
+
+  "roles": {
+    "supervisor": "Wykładowca",
+    "worker": "Pracownik dziekanatu",
+    "student": "Student"
+  },
+
+  "pagination": {
+    "page": "Strona",
+    "previous": "Poprzednia",
+    "next": "Następna"
+  },
+
+  "users": {
+    "seePayments": "Zobacz płatności użytkownika"
   },
 
   "profile": {
@@ -94,5 +131,15 @@
     "fetchTemplates": "Błąd podczas pobierania formularzy",
     "logout": "Błąd podczas wylogowywania",
     "userInfo": "Błąd podczas pobierania danych użytkownika"
+  },
+  
+  "inputErrors": {
+    "emptyPaymentTitle": "Musisz podać tytuł płatności",
+    "emptyPaymentValue": "Musisz podać wartość płatności",
+    "emptyPaymentDescription": "Musisz podać opis płatności",
+    "incorrectEmail": "Błędny adres email",
+    "shortPassword": "Hasło musi zawierać przynajmniej trzy znaki",
+    "capitalName": "Imię musi zaczynać się z dużej litery",
+    "capitalSurname": "Nazwisko musi zaczynać się z dużej litery"
   }
 }
