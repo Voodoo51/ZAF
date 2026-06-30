@@ -91,8 +91,8 @@ export const PropositionCreatorView = () => {
                         <input
                             type="file"
                             multiple
-                            onChange={e =>
-                            ()=>{
+                            onChange={(e) =>
+                             {
                                 const MAX_FILE_SIZE = 10 * 1024 * 1024;
                                 const MAX_TOTAL_SIZE = 50 * 1024 * 1024;
 
