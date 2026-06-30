@@ -14,11 +14,23 @@ import { PropositionDetailsView } from "./views/PropositionDetails";
 import { RegisterUserView } from "./views/RegisterUser";
 import { UsersView } from "./views/Users";
 import { PaymentsAdminView } from "./views/PaymentsAdmin";
+import { PdfMapperView } from "./views/PdfMapper";
+import { PdfPreviewView } from "./views/PdfPreview";
 
-const Protected = ({ children }: { children: ReactNode }) => {
+const Protected = ({ children, noLayout=false }: { children: ReactNode, noLayout?:boolean }) => {
   const { user } = useAppContext();
   if (!user) return <Navigate to="/login" replace />;
-  return <Layout>{children}</Layout>;
+
+  if (noLayout) {
+    return <>{children}</>;
+  }
+
+
+  return (
+    <Layout>
+      {children}
+    </Layout>
+  );
 };
 
 export const Nav = () =>{
@@ -30,9 +42,11 @@ export const Nav = () =>{
           <Route path="/" element={<Protected><HomeView /></Protected>} />
           <Route path="/profile" element={<Protected><ProfileView /></Protected>} />
           <Route path="/form/:templateId" element={<Protected><FormView /></Protected>} />
+          <Route path="/pdf-mapper" element={<Protected noLayout><PdfMapperView /></Protected>} />
           {user?.role !== "student" && (
             <Route path="/creator" element={<Protected><CreatorView/></Protected>} />
           )}
+          <Route path="/pdf-preview" element={<Protected noLayout> <PdfPreviewView/> </Protected>}/>
           <Route path="/payment" element={<Protected><PaymentsView/></Protected>} />
           <Route path="/payments/:userId" element={<Protected><PaymentsAdminView/></Protected>} />
           <Route path="/proposition" element={<Protected><PropositionListView/></Protected>} />

@@ -3,12 +3,14 @@ import { useAppContext, useFilter } from "../App";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { UserPublicData } from "../types";
+import { useLocation } from "react-router-dom";
 
 type StudentSentFormDTO = {
   id: number;
   templateId: number;
   statusId: number;
   templateTitle: string;
+  sentAt: string | null;
 };
 
 type PrivilegedSentFormDTO = {
@@ -17,6 +19,7 @@ type PrivilegedSentFormDTO = {
   templateTitle: string;
   user: UserPublicData;
   statusId: number;
+  sentAt: string;
 };
 
 const PAGE_SIZE = 10;
@@ -24,17 +27,28 @@ const PAGE_SIZE = 10;
 export const HomeView = () => {
   const { t } = useTranslation();
   const { filterId } = useFilter();
-  const { user } = useAppContext();
+  const { user, search } = useAppContext();
 
   const [tiles, setTiles] = useState<StudentSentFormDTO[]>([]);
   const [privilegedTiles, setPrivilegedTiles] = useState<PrivilegedSentFormDTO[]>([]);
-  const [page, setPage] = useState(0);
-  const [maxPage, setMaxPage] = useState(1);
 
   const isPrivileged = user?.role === "worker" || user?.role === "admin";
 
+  const location = useLocation();
+
+  const [page, setPage] = useState<number>(location.state?.page ?? 0);
+  const [maxPage, setMaxPage] = useState(1);
+
   const fetchUserForms = () => {
-    fetch(`http://localhost:8080/form/sent?page=${page}&size=${PAGE_SIZE}`, {
+     const url = search.trim() === ""
+    ? filterId !== -1 ?
+    `http://localhost:8080/form/sent?page=${page}&size=${PAGE_SIZE}&statusId=${filterId}` :
+    `http://localhost:8080/form/sent?page=${page}&size=${PAGE_SIZE}`
+    : filterId !== -1 ? 
+      `http://localhost:8080/form/sent/search?query=${encodeURIComponent(search)}&statusId=${filterId}&page=${page}&size=${PAGE_SIZE}` :
+      `http://localhost:8080/form/sent/search?query=${encodeURIComponent(search)}&page=${page}&size=${PAGE_SIZE}`;
+
+    fetch(url, {
       credentials: "include",
       method: "GET",
       headers: {
@@ -44,18 +58,6 @@ export const HomeView = () => {
       .then((res) => res.json())
       .then((data) => {
 
-        /*
-        const mappedTiles: StudentSentFormDTO[] = data.map(
-          (item: any, index: number) => ({
-            id: index + 1,
-            templateId: item.templateId,
-            statusId: item.statusId,
-            templateTitle: item.templateTitle,
-          })
-
-        );
-        */
-       
         setTiles(data.content);
         setMaxPage(data.totalPages);
       })
@@ -65,8 +67,16 @@ export const HomeView = () => {
   };
 
   const fetchAllForms = () => {
+     const url = search.trim() === ""
+    ? filterId !== -1 ? 
+    `http://localhost:8080/form/sent/all?page=${page}&size=${PAGE_SIZE}&statusId=${filterId}`: 
+    `http://localhost:8080/form/sent/all?page=${page}&size=${PAGE_SIZE}`
+    : filterId !== -1 ? 
+      `http://localhost:8080/form/sent/search?query=${encodeURIComponent(search)}&statusId=${filterId}&page=${page}&size=${PAGE_SIZE}` :
+      `http://localhost:8080/form/sent/search?query=${encodeURIComponent(search)}&page=${page}&size=${PAGE_SIZE}`;
+
     fetch(
-      `http://localhost:8080/form/sent/all?page=${page}&size=${PAGE_SIZE}`,
+      url,
       {
         credentials: "include",
         method: "GET",
@@ -91,7 +101,7 @@ export const HomeView = () => {
     } else {
       fetchUserForms();
     }
-  }, [user, page]);
+  }, [user, page, search, filterId]);
 
  
   const filteredTiles = useMemo(() => {
@@ -109,8 +119,6 @@ export const HomeView = () => {
       (tile) => tile.statusId === filterId
     );
   }, [privilegedTiles, filterId]);
-  console.log(privilegedTiles);
-  console.log(filteredPrivilegedTiles);
 
   return (
     <div className="bg-white p-6 rounded-2xl shadow-sm">
@@ -120,9 +128,9 @@ export const HomeView = () => {
 
       <div className="max-h-[70vh] overflow-y-auto">
         {isPrivileged ? (
-          <PrivilegedTiles privilegedTiles={filteredPrivilegedTiles} />
+          <PrivilegedTiles privilegedTiles={filteredPrivilegedTiles} page={page} />
         ) : (
-          <Tiles tiles={filteredTiles} user={user}/>
+          <Tiles tiles={filteredTiles} user={user} page={page}/>
         )}
 
           <div className="flex justify-center gap-4 mt-6">

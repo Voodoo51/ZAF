@@ -69,21 +69,34 @@ const Sidebar = () => {
 
 
 const TopBar = () => {
- const { filterId, setFilterId } = useFilter();
- const { t } = useTranslation();
-
-const baseClass = "px-3 py-1.5 rounded-full text-sm";
-const getClass = (number: number) =>
-    filterId === number
-      ? `${baseClass} text-white bg-[rgb(63,152,255)]`
-      : `${baseClass} bg-gray-200 text-gray-700`;
-
- return (
-  <div className="flex items-center justify-between mb-4">
-    <input
+ /*
+ 
+ <input
       placeholder={t("common.search")}
       className="w-1/3 px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-300"
     />
+    */
+
+  const { filterId, setFilterId } = useFilter();
+  const { t } = useTranslation();
+  const {search, setSearch} = useAppContext();
+
+  const baseClass = "px-3 py-1.5 rounded-full text-sm";
+  const getClass = (number: number) =>
+      filterId === number
+        ? `${baseClass} text-white bg-[rgb(63,152,255)]`
+        : `${baseClass} bg-gray-200 text-gray-700`;
+
+ return (
+    <div className="flex items-center justify-between mb-4">
+
+      <input
+          value={search ?? ""}
+          onChange={(e)=>setSearch(e.target.value)}
+          placeholder={t("common.search")}
+          className="w-1/3 px-3 py-2 rounded-lg border border-gray-300"
+        />
+    
 
     <div className="flex gap-2">
       <button className={getClass(-1)} onClick={() => setFilterId(-1)}>{t("filters.all")} {filterId === -1 && "✓"}  </button>
@@ -100,6 +113,7 @@ const getClass = (number: number) =>
 export const Layout = ({ children }: { children: ReactNode }) => {
 
     const [active, setActive] = useState("all");
+
     return(
   <div className="flex h-screen bg-gray-50">
     <Sidebar />
@@ -108,7 +122,12 @@ export const Layout = ({ children }: { children: ReactNode }) => {
         <TopBar/>
         <div>{children}</div>
       </div>
-    </main>
+      </main>
+      {/* MINE PREV SZYM
+    <main className="flex-1 p-6">
+      <TopBar />
+      <div>{children}</div>
+    </main> */}
   </div>
 );
 };
