@@ -159,12 +159,6 @@ const handleGithubOAuthLogin = () => {
         </span>
       </button>
 
-      <div className="text-sm text-center">
-        <span className="text-gray-500">{t("login.noAccount")}{" "}</span>
-        <span className="text-blue-500 underline cursor-pointer">
-          {t("login.register")}
-        </span>
-      </div>
       <div className="flex justify-evenly items-center text-sm mt-4">
         <button onClick={() => i18n.changeLanguage("pl")}>
           PL
