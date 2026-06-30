@@ -19,8 +19,15 @@ export const PaymentsView = () => {
     const [loading, setLoading] = useState(true);
     const { t } = useTranslation();
     const paymentsWord = [t("paymentStatus.unpaid"), t("paymentStatus.pending"), t("paymentStatus.paid"), t("paymentStatus.cancelled")];
+    const paymentStatusStyles = [
+        "bg-yellow-100 text-yellow-700",
+        "bg-blue-100 text-blue-700",
+        "bg-green-100 text-green-700",
+        "bg-red-100 text-red-700"
+    ];
 
     useEffect(() => {
+        console.log("halo");
         console.log(`http://localhost:8080/payment/all/${user?.id}`);
         fetch(`http://localhost:8080/payment/all/${user?.id}`, {
             method: 'GET',
@@ -69,139 +76,52 @@ export const PaymentsView = () => {
         }  
     };
 
-    const createPayment = async () => {
-        try {
-            const payload = {
-                userId: user?.id,
-                title: "New payment",
-                description: "New payment description",
-                amount: 10000
-            };
-
-            const response = await fetch("http://localhost:8080/payment/create", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload),
-            });
-            console.log(payload);
-
-            if (!response.ok) {
-                console.error("Nie udało się dodać płatności");
-            }
-            if (response.ok) {
-                
-            }
-        } catch (error) {
-            console.error("Coś poszło nie tak w createPayment", error);
-        }
-    };
-
-    const deletePayment = (id: number) => {
-        try {
-            fetch(`http://localhost:8080/payment/delete/${id}`, {
-            method: 'DELETE',
-            mode: 'cors',
-            credentials: 'include',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({id: id}),
-            });
-        } catch (error) {
-            console.error("Coś poszło nie tak w deletePayment", error);
-        }
-    };
-
-    const updatePayment = (id: number) => {
-        try {
-            const payload = {
-                title: "Modified payment",
-                description: "Modified payment description",
-                amount: 20000
-            };
-
-            fetch(`http://localhost:8080/payment/update/${id}`, {
-            method: 'PUT',
-            mode: 'cors',
-            credentials: 'include',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload),
-            });
-        } catch (error) {
-            console.error("Coś poszło nie tak w updatePayment", error);
-        }
-    };
-
     return (
         <div className="bg-white p-6 rounded-2xl shadow-sm">
-            <button
-                className="px-5 py-3 rounded-lg text-white bg-[rgb(63,152,255)] hover:opacity-90 transition"
-                onClick={createPayment}    
-            >
-                {t("paymentView.add")}
-            </button>
             <div className="space-y-4">
                 {payments.length === 0 ? (
                     <p className="text-gray-500">
                         {t("paymentView.empty")}
                     </p>
                 ) : (
-                    payments.map(payment => (
+                    payments.map((payment) => (
                         <div
                             key={payment.id}
-                            className="border rounded-xl p-5 hover:shadow-md transition"
+                            className="group border rounded-xl p-5 hover:shadow-md transition"
                         >
-                            <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-4">
                                 <h2 className="text-lg font-semibold">
                                     {payment.title}
                                 </h2>
 
-                                <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm">
-                                    {paymentsWord[payment.paymentStatus?.id]}
+                                <span className="text-xl font-bold text-green-600">
+                                    {(payment.amount / 100).toFixed(2)} PLN
                                 </span>
                             </div>
 
-                            <p className="mt-3 text-gray-600">
+                            <span className={`px-3 py-1 rounded-full ${paymentStatusStyles[payment.paymentStatus?.id]} text-sm`}>
+                                {paymentsWord[payment.paymentStatus?.id]}
+                            </span>
+                        </div>
+
+                        <div className="max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100 transition-all duration-300">
+                            <p className="mt-4 text-gray-600">
                                 {payment.description}
                             </p>
 
-                            <div className="flex justify-between items-center">
-                                <div className="mt-4 text-xl font-bold text-green-600">
-                                    {(payment.amount / 100).toFixed(2)} PLN
-                                </div>
-                                
-                                <div className="flex justify-between items-center">
-                                    {payment.paymentStatus?.id !== 2 && (
-                                        <button
-                                            className="px-3 py-1 m-2 rounded-lg text-white bg-green-600 hover:opacity-90 transition"
-                                            onClick={() => doPayment(payment.id)}    
-                                        >
-                                            {t("paymentView.pay")}
-                                        </button>
-                                    )}
-                                    {payment.paymentStatus?.id === 0 && (
-                                        <button
-                                            className="px-3 py-1 m-2 rounded-lg text-white bg-[rgb(188,124,34)] hover:opacity-90 transition"
-                                            onClick={() => updatePayment(payment.id)}    
-                                        >
-                                            {t("paymentView.update")}
-                                        </button>
-                                    )}
-                                    {payment.paymentStatus?.id !== 2 && (
-                                        <button
-                                            className="px-3 py-1 m-2 rounded-lg text-white bg-[rgb(255,25,25)] hover:opacity-90 transition"
-                                            onClick={() => deletePayment(payment.id)}    
-                                        >
-                                            {t("paymentView.delete")}
-                                        </button>
-                                    )}
-                                </div>
+                            <div className="flex justify-end mt-4">
+                                {payment.paymentStatus?.id !== 2 && (
+                                    <button
+                                        className="px-3 py-1 m-2 rounded-lg text-white bg-green-600 hover:opacity-90 transition"
+                                        onClick={() => doPayment(payment.id)}
+                                    >
+                                        {t("paymentView.pay")}
+                                    </button>
+                                )}
                             </div>
                         </div>
+                    </div>
                     ))
                 )}
             </div>
