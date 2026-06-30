@@ -220,9 +220,16 @@ export const CreatorView = () => {
 
                     <label
                         htmlFor="pdf-upload"
-                        className="px-4 py-2 bg-gray-200 rounded cursor-pointer"
+                        className="px-4 py-2 
+                            rounded-lg
+                            border
+                            border-blue-500
+                            text-blue-600
+                            font-medium
+                            hover:bg-blue-50
+                            transitionrounded cursor-pointer"
                     >
-                        Choose PDF
+                        {t("pdf.choosePdf")}
                     </label>
 
                     {pdfFile && (

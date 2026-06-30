@@ -3,6 +3,17 @@
     "name": "E-Dziekanat"
   },
 
+  "pdf": {
+    "download": "Pobierz PDF",
+    "preview": "Podgląd PDF",
+    "fontSize": "Rozmiar czcionki",
+    "page": "Strona",
+    "position": "Pozycja",
+    "choosePdf": "Wybierz plik PDF",
+    "renderingPdf": "Renderowanie pliku PDF...",
+    "noPdfFile": "Nie wybrano pliku PDF"
+  },
+
   "navigation": {
     "home": "Formularze",
     "profile": "Profil",
@@ -41,7 +52,7 @@
     "confirmDelete": "Czy naprawdę chcesz usunąć tę płatność?",
     "title": "Tytuł płatności",
     "description": "Opis płatności",
-    "userPayments": "Płatności użytkownika"
+    "userPayments": "Płatności użytkownika"    
   },
 
   "common": {
@@ -54,7 +65,10 @@
     "no": "Nie",
     "yes": "Tak",
     "cancel": "Anuluj",
-    "confirm": "Zatwierdź"
+    "confirm": "Zatwierdź",
+    "goBack": "Powrót",
+    "writeMessage": "Napisz wiadomość...",
+    "attachements": "Załączniki"
   },
 
   "login": {
@@ -92,7 +106,8 @@
   },
 
   "users": {
-    "seePayments": "Zobacz płatności użytkownika"
+    "seePayments": "Zobacz płatności użytkownika",
+    "seeSentForms": "Zobacz Formularze użytkownika"
   },
 
   "profile": {
@@ -126,6 +141,7 @@
   },
 
   "errors": {
+    "server": "Bład serwera. Spróboj ponownie później.",
     "saveForm": "Nie udało się zapisać formularza",
     "saveFormUnexpected": "Wystąpił błąd podczas zapisywania formularza",
     "fetchTemplates": "Błąd podczas pobierania formularzy",
@@ -140,6 +156,7 @@
     "incorrectEmail": "Błędny adres email",
     "shortPassword": "Hasło musi zawierać przynajmniej trzy znaki",
     "capitalName": "Imię musi zaczynać się z dużej litery",
-    "capitalSurname": "Nazwisko musi zaczynać się z dużej litery"
+    "capitalSurname": "Nazwisko musi zaczynać się z dużej litery",
+    "wrongLogin": "Niepoprawny email lub hasło. Spróboj ponownie."
   }
 }

@@ -258,7 +258,7 @@ export const FormView = () => {
 };
 
     if (!template) {
-        return <div>{t("common.loading")}</div>;
+        return <div>{/*t("common.loading")*/}</div>;
     }
 
     return (

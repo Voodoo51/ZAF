@@ -3,6 +3,7 @@ import { useState } from "react";
 import { PdfCanvas } from "./PdfCanvas";
 import { FieldSidebar } from "../utils/FieldSideBar";
 import { FormField } from "../types";
+import { useTranslation } from "react-i18next";
 
 
 interface MapperState {
@@ -16,6 +17,7 @@ export const PdfMapperView = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const { t } = useTranslation();
     const state = location.state as MapperState | null;
     const [selectedId, setSelectedId] = useState<number | null>(null);
     const [pageCount, setPageCount] = useState(0);
@@ -112,7 +114,18 @@ return (
                 }
                     
                 }
-                className=" px-4 py-2 bg-gray-200 rounded"> ← Back
+                className=" 
+                px-4 
+                py-2 
+                rounded-lg
+                border
+                border-blue-500
+                text-blue-600
+                font-medium
+                hover:bg-blue-50
+                transitionrounded cursor-pointer
+                "> 
+                ← {t("common.goBack")}
                 </button>
 
 
@@ -131,7 +144,7 @@ return (
                 rounded
                 "
                 >
-                Save
+                {t("common.save")}
                 </button>
 
 

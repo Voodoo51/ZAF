@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { PdfCanvas } from "./PdfCanvas";
 import { FormField } from "../types";
 import { exportPdf } from "../utils/PdfExporter";
+import { useTranslation } from "react-i18next";
 
 
 interface State {
@@ -18,6 +19,7 @@ interface State {
 
 
 export const PdfPreviewView = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
     const state = location.state as State | null;
@@ -91,29 +93,33 @@ export const PdfPreviewView = () => {
 
 
         <div className="
-            h-16
-            bg-white
-            border-b
-            flex
-            items-center
-            px-6
-            relative
+            h-16 flex items-center justify-between border-b bg-white px-6
         ">
             <button
                 onClick={()=>navigate(-1)}
                 className="
                     px-4
                     py-2
-                    bg-gray-200
                     rounded-lg
-                    hover:bg-gray-300
-                    transition
+                    border
+                    border-blue-500
+                    text-blue-600
+                    font-medium
+                    hover:bg-blue-50
+                    transitionrounded cursor-pointer
                 "
             >
-                ← Back
+                ← {t("common.goBack")}
             </button>
 
             <button
+            className="
+                px-4
+                py-2
+                bg-blue-500
+                text-white
+                rounded
+                "
             onClick={()=>{
                 if (!pageSize) {
                         return;
@@ -134,7 +140,7 @@ export const PdfPreviewView = () => {
 
             }}
             >
-            Download PDF
+            {t("pdf.download")}
             </button>
 
 

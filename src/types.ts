@@ -28,7 +28,7 @@ export type TMessageFile = {
 export type TPropositionMessage = {
     id: number;
     proposition: TProposition;
-    user: TUserPublicData;
+    user: UserPublicData;
     createdAt: string;
     message: string;
     files: TMessageFile[];

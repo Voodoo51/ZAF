@@ -1,7 +1,9 @@
 import { ReactNode, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAppContext, useFilter } from "../App";
 import { useTranslation } from "react-i18next";
+import plFlag from "../resources/pl.png";
+import enFlag from "../resources/en.png";
 
 const Sidebar = () => {
   const { user, setUser } = useAppContext();
@@ -111,7 +113,8 @@ const TopBar = () => {
 };
 
 export const Layout = ({ children }: { children: ReactNode }) => {
-
+    const location = useLocation();
+    const hideTopBar = location.pathname.includes("/proposition/"); // adjust if needed
     const [active, setActive] = useState("all");
 
     return(
@@ -119,7 +122,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
     <Sidebar />
     <main className="flex-1 overflow-y-auto">
       <div className="p-6">
-        <TopBar/>
+        {!hideTopBar && <TopBar />}
         <div>{children}</div>
       </div>
       </main>

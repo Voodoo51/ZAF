@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {useAppContext} from "../App";
-import { Link } from "react-router-dom";
+import { Link, useNavigate,  } from "react-router-dom";
 
 type TUser = {
     id: number,
@@ -15,7 +15,8 @@ type TUser = {
 };
 
 export const UsersView = () => {
-    const { user } = useAppContext();
+    const navigate  = useNavigate();
+    const { user, search, setSearch } = useAppContext();
     const [users, setUsers] = useState<TUser[]>([]);
     const [loading, setLoading] = useState(true);
     const { t } = useTranslation();
@@ -25,7 +26,10 @@ export const UsersView = () => {
     const isPrivileged = user?.role === "worker" || user?.role === "admin";
 
     const fetchAllUsers = () => {
-        fetch(`http://localhost:8080/user/all?page=${page}&size=10`, {
+         const url = search.trim() === "" ? 
+         `http://localhost:8080/user/all?page=${page}&size=10` :
+        `http://localhost:8080/user/all/search?query=${search}&page=${page}&size=10`;
+        fetch(url, {
             method: 'GET',
             mode: 'cors',
             credentials: 'include',
@@ -50,7 +54,7 @@ export const UsersView = () => {
         if (isPrivileged) {
             fetchAllUsers();
         }
-    }, [user, page]);
+    }, [user, page, search]);
 
     if (loading) {
         return (
@@ -93,6 +97,13 @@ export const UsersView = () => {
                                     <Link to={`/payments/${user.id}`} className="text-blue-600 hover:underline">
                                         {t("users.seePayments")}
                                     </Link>
+                                    <button onClick={() => {
+                                        setSearch(`${user.name} ${user.surname}`);
+                                        navigate("/");
+                                    }
+                                    } className="text-blue-600 hover:underline">
+                                        {t("users.seeSentForms")}
+                                    </button>
                                 </div>
                             </div>
                         ))

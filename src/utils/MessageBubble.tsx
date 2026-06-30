@@ -1,63 +1,45 @@
 import { TPropositionMessage } from "../types";
 
-type Props = {
-    message: TPropositionMessage;
-    currentUserId: number;
-};
-
 export const MessageBubble = ({
     message,
     currentUserId
-}: Props) => {
+}: {
+    message: TPropositionMessage;
+    currentUserId: number;
+}) => {
 
-    const own = message.user.id === currentUserId;
+    const isMine = message.user.id === currentUserId;
 
     return (
         <div
-            className={`flex ${
-                own ? "justify-end" : "justify-start"
+            className={`p-4 rounded-lg max-w-xl ${
+                isMine
+                    ? "bg-blue-600 text-white ml-auto"
+                    : "bg-gray-200 text-gray-900 mr-auto"
             }`}
         >
-            <div
-                className={`
-                    max-w-[70%]
-                    rounded-2xl
-                    px-5
-                    py-3
-                    shadow
-                    ${
-                        own
-                            ? "bg-blue-600 text-white"
-                            : "bg-white"
-                    }
-                `}
-            >
-                <div className="font-semibold text-sm mb-2">
-                    {message.user.firstName}{" "}
-                    {message.user.lastName}
+
+            {!isMine && (
+                <div className="text-xs font-semibold mb-1">
+                    {message.user.name} {message.user.surname}
                 </div>
+            )}
 
-                <p>{message.message}</p>
+            <div>{message.message}</div>
 
-                {message.files.length > 0 && (
-                    <div className="mt-3 space-y-2">
-                        {message.files.map(file => (
-                            <div
-                                key={file.id}
-                                className="text-sm underline cursor-pointer"
-                            >
-                                📎 {file.fileName}
-                            </div>
-                        ))}
-                    </div>
-                )}
-
-                <div className="text-xs opacity-70 mt-2">
-                    {new Date(
-                        message.createdAt
-                    ).toLocaleString()}
+            {message.files?.length > 0 && (
+                <div className="mt-2 space-y-1">
+                    {message.files.map(f => (
+                        <a
+                            key={f.id}
+                            href={`https://mock-download/${f.id}`}
+                            className="text-sm underline block"
+                        >
+                            📎 {f.fileName}
+                        </a>
+                    ))}
                 </div>
-            </div>
+            )}
         </div>
     );
 };

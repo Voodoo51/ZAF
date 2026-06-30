@@ -3,6 +3,17 @@
     "name": "E-Dean's Office"
   },
 
+  "pdf": {
+    "download": "Download PDF",
+    "preview": "Preview PDF",
+    "fontSize": "Font Size",
+    "page": "Page",
+    "position": "Position",
+    "choosePdf": "Choose PDF",
+    "renderingPdf": "Rendering PDF...",
+     "noPdfFile": "No PDF inserted"
+  },
+
   "navigation": {
     "home": "Home",
     "profile": "Profile",
@@ -54,7 +65,10 @@
     "no": "No",
     "yes": "Yes",
     "cancel": "Cancel",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "goBack": "Go back",
+    "writeMessage": "Write a message...",
+    "attachements": "Attachements"
   },
 
   "login": {
@@ -92,7 +106,8 @@
   },
 
   "users": {
-    "seePayments": "See user payments"
+    "seePayments": "See user payments",
+    "seeSentForms": "See user forms"
   },
 
   "profile": {
@@ -126,6 +141,7 @@
   },
 
   "errors": {
+    "server": "Server error. Please try again later.",
     "saveForm": "Failed to save form",
     "saveFormUnexpected": "An error occurred while saving the form",
     "fetchTemplates": "Error while fetching forms",
@@ -140,6 +156,7 @@
     "incorrectEmail": "Incorrect email address",
     "shortPassword": "Password must be at least three characters long",
     "capitalName": "Name must start with a capital letter",
-    "capitalSurname": "Surname must start with a capital letter"
+    "capitalSurname": "Surname must start with a capital letter",
+    "wrongLogin": "Wrong email or password. Please try again."
   }
 }
