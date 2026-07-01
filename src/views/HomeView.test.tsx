@@ -6,9 +6,19 @@ const mockTiles = jest.fn();
 
 jest.mock("../App", () => ({
   useAppContext: () => ({
-    user: { id: 1 },
+    user: {
+      id: 1,
+      role: "student",
+    },
+    search: "",
   }),
   useFilter: () => mockUseFilter(),
+}));
+
+jest.mock("react-router-dom", () => ({
+  useLocation: () => ({
+    state: {},
+  }),
 }));
 
 jest.mock("../utils/Tiles", () => ({
@@ -18,11 +28,13 @@ jest.mock("../utils/Tiles", () => ({
     return (
       <div data-testid="tiles">
         {tiles.map((tile: any) => (
-          <div key={tile.id}>{tile.title}</div>
+          <div key={tile.id}>{tile.templateTitle}</div>
         ))}
       </div>
     );
   },
+
+  PrivilegedTiles: () => <div data-testid="privileged-tiles" />,
 }));
 
 jest.mock("react-i18next", () => ({
@@ -32,95 +44,103 @@ jest.mock("react-i18next", () => ({
 }));
 
 describe("HomeView", () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
+  beforeEach(() => {
+    jest.clearAllMocks();
 
-        mockUseFilter.mockReturnValue({
-            filterId: -1,
-        });
+    mockUseFilter.mockReturnValue({
+      filterId: -1,
     });
-
-it("renders title", async () => {
-  global.fetch = jest.fn().mockResolvedValue({
-    json: () => Promise.resolve([]),
-  }) as any;
-
-  render(<HomeView />);
-
-  expect(screen.getByText("home.title"))
-    .toBeInTheDocument();
-
-  // wait for async update to complete
-  await waitFor(() => {
-    expect(global.fetch).toHaveBeenCalled();
   });
-});
 
-  it("fetches and renders templates", async () => {
+  it("renders title", async () => {
     global.fetch = jest.fn().mockResolvedValue({
-      json: () =>
-        Promise.resolve([
-          {
-            templateId: 10,
-            statusId: 1,
-            title: "Leave Request",
-          },
-          {
-            templateId: 11,
-            statusId: 2,
-            title: "Vacation Form",
-          },
-        ]),
+      ok: true,
+      json: async () => ({
+        content: [],
+        totalPages: 1,
+      }),
     }) as any;
 
     render(<HomeView />);
 
-    expect(await screen.findByText("Leave Request"))
-      .toBeInTheDocument();
+    expect(screen.getByText("home.title")).toBeInTheDocument();
 
-    expect(screen.getByText("Vacation Form"))
-      .toBeInTheDocument();
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalled();
+    });
+  });
+
+  it("fetches and renders forms", async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        content: [
+          {
+            id: 1,
+            templateId: 10,
+            statusId: 1,
+            templateTitle: "Leave Request",
+            sentAt: null,
+          },
+          {
+            id: 2,
+            templateId: 11,
+            statusId: 2,
+            templateTitle: "Vacation Form",
+            sentAt: null,
+          },
+        ],
+        totalPages: 1,
+      }),
+    }) as any;
+
+    render(<HomeView />);
+
+    expect(await screen.findByText("Leave Request")).toBeInTheDocument();
+    expect(screen.getByText("Vacation Form")).toBeInTheDocument();
 
     expect(global.fetch).toHaveBeenCalledWith(
-      "http://localhost:8080/form/templates",
-      {
+      "http://localhost:8080/form/sent?page=0&size=10",
+      expect.objectContaining({
         method: "GET",
         credentials: "include",
-      }
+      })
     );
   });
 
-it("filters tiles based on filterId", async () => {
-  mockUseFilter.mockReturnValue({
-    filterId: 1,
+  it("filters tiles based on filterId", async () => {
+    mockUseFilter.mockReturnValue({
+      filterId: 1,
+    });
+
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        content: [
+          {
+            id: 1,
+            templateId: 10,
+            statusId: 1,
+            templateTitle: "Accepted Form",
+            sentAt: null,
+          },
+          {
+            id: 2,
+            templateId: 11,
+            statusId: 2,
+            templateTitle: "Pending Form",
+            sentAt: null,
+          },
+        ],
+        totalPages: 1,
+      }),
+    }) as any;
+
+    render(<HomeView />);
+
+    expect(await screen.findByText("Accepted Form")).toBeInTheDocument();
+    expect(screen.queryByText("Pending Form")).not.toBeInTheDocument();
   });
-
-  global.fetch = jest.fn().mockResolvedValue({
-    json: () =>
-      Promise.resolve([
-        {
-          templateId: 10,
-          statusId: 1,
-          title: "Accepted Form",
-        },
-        {
-          templateId: 11,
-          statusId: 2,
-          title: "Pending Form",
-        },
-      ]),
-  }) as jest.Mock;
-
-  render(<HomeView />);
-
-  await waitFor(() => {
-    expect(screen.getByText("Accepted Form"))
-      .toBeInTheDocument();
-  });
-
-  expect(screen.queryByText("Pending Form"))
-    .not.toBeInTheDocument();
-});
 
   it("handles fetch errors gracefully", async () => {
     global.fetch = jest.fn().mockRejectedValue(new Error("API error")) as any;
@@ -131,7 +151,6 @@ it("filters tiles based on filterId", async () => {
       expect(global.fetch).toHaveBeenCalled();
     });
 
-    expect(screen.getByText("home.title"))
-      .toBeInTheDocument();
+    expect(screen.getByText("home.title")).toBeInTheDocument();
   });
 });

@@ -26,7 +26,7 @@ describe("PaymentsView", () => {
     global.fetch = jest.fn(
       () =>
         new Promise(() => {
-        
+          // never resolves
         })
     ) as any;
 
@@ -37,95 +37,98 @@ describe("PaymentsView", () => {
 
   it("renders empty message when no payments exist", async () => {
     global.fetch = jest.fn().mockResolvedValue({
-      json: () => Promise.resolve([]),
+      ok: true,
+      json: async () => [],
     }) as any;
 
     render(<PaymentsView />);
 
-    expect(await screen.findByText("payments.empty"))
-      .toBeInTheDocument();
+    expect(await screen.findByText("paymentView.empty")).toBeInTheDocument();
   });
 
   it("renders fetched payments", async () => {
     global.fetch = jest.fn().mockResolvedValue({
-      json: () =>
-        Promise.resolve([
-          {
-            id: 1,
-            paymentStatus: {
-              id: 2,
-              name: "paid",
-            },
-            title: "Invoice #1",
-            description: "Test payment",
-            amount: 5000,
+      ok: true,
+      json: async () => [
+        {
+          id: 1,
+          paymentStatus: {
+            id: 2,
+            name: "paid",
           },
-        ]),
+          title: "Invoice #1",
+          description: "Test payment",
+          amount: 5000,
+        },
+      ],
     }) as any;
 
     render(<PaymentsView />);
 
-    expect(await screen.findByText("Invoice #1"))
-      .toBeInTheDocument();
+    expect(await screen.findByText("Invoice #1")).toBeInTheDocument();
 
-    expect(screen.getByText("Test payment"))
-      .toBeInTheDocument();
+    // If the description is visible, keep this assertion.
+    // Remove it if the component hides it until hover.
+    expect(screen.getByText("Test payment")).toBeInTheDocument();
 
-    expect(screen.getByText("50.00 PLN"))
-      .toBeInTheDocument();
-
-    expect(screen.getByText("paymentStatus.paid"))
-      .toBeInTheDocument();
+    expect(screen.getByText("50.00 PLN")).toBeInTheDocument();
+    expect(screen.getByText("paymentStatus.paid")).toBeInTheDocument();
   });
 
   it("sends payment request and redirects on click", async () => {
     global.fetch = jest
       .fn()
-      // first fetch -> list payments
       .mockResolvedValueOnce({
-        json: () =>
-          Promise.resolve([
-            {
+        ok: true,
+        json: async () => [
+          {
+            id: 1,
+            paymentStatus: {
               id: 1,
-              paymentStatus: { id: 1, name: "pending" },
-              title: "Invoice",
-              description: "desc",
-              amount: 1000,
+              name: "pending",
             },
-          ]),
+            title: "Invoice",
+            description: "desc",
+            amount: 1000,
+          },
+        ],
       })
-      // second fetch -> pay
       .mockResolvedValueOnce({
-        json: () =>
-          Promise.resolve({
-            redirectUrl: "http://stripe.com/checkout",
-          }),
+        ok: true,
+        json: async () => ({
+          redirectUrl: "http://stripe.com/checkout",
+        }),
       });
 
-    delete (window as any).location;
-
-    (window as any).location = {
-      href: "",
-    };
+    Object.defineProperty(window, "location", {
+      writable: true,
+      value: {
+        href: "",
+      },
+    });
 
     render(<PaymentsView />);
 
-    const paymentCard = await screen.findByText("Invoice");
+    const payButton = await screen.findByRole("button", {
+      name: "paymentView.pay",
+    });
 
-    fireEvent.click(paymentCard);
+    fireEvent.click(payButton);
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledTimes(2);
 
-      expect(global.fetch).toHaveBeenLastCalledWith(
+      expect(global.fetch).toHaveBeenNthCalledWith(
+        2,
         "http://localhost:8080/payment/pay",
         expect.objectContaining({
           method: "POST",
         })
       );
 
-      expect(window.location.href)
-        .toBe("http://stripe.com/checkout");
+      expect(window.location.href).toBe(
+        "http://stripe.com/checkout"
+      );
     });
   });
 
@@ -134,7 +137,6 @@ describe("PaymentsView", () => {
 
     render(<PaymentsView />);
 
-    expect(await screen.findByText("payments.empty"))
-      .toBeInTheDocument();
+    expect(await screen.findByText("paymentView.empty")).toBeInTheDocument();
   });
 });

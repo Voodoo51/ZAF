@@ -201,7 +201,7 @@ export const PdfCanvas = ({
                                 fontFamily="Roboto"
                                 key={field.id}
                                 text={
-                                    values ? `${values[field.id]}`
+                                    values ? values[field.id] === undefined ? t("pdf.undefined") : `${values[field.id]}`
                                     : `${field.label}: ${field.placeholder}`
                                 }
 

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 import { BrowserRouter, Routes, Route, Link, Navigate, useNavigate } from "react-router-dom";
 import { Nav } from "./Navigation";
 import type { User } from "./types";
+import { useTranslation } from "react-i18next";
 
 type AppContextType = {
   user: User | null;
@@ -47,6 +48,9 @@ export const useFilter = () => {
   return context;
 };
 export default function App() {
+    const { t } = useTranslation();
+    document.title = t("app.name");
+
   return (
     <AppProvider>
       <FilterProvider>

@@ -8,240 +8,229 @@ const mockSetUser = jest.fn();
 const mockChangeLanguage = jest.fn();
 
 jest.mock("react-router-dom", () => ({
-    ...jest.requireActual("react-router-dom"),
-    useNavigate: () => mockNavigate
+  ...jest.requireActual("react-router-dom"),
+  useNavigate: () => mockNavigate,
 }));
 
 jest.mock("../App", () => ({
-    useAppContext: () => ({
-        user: null,
-        setUser: mockSetUser
-    })
+  useAppContext: () => ({
+    user: null,
+    setUser: mockSetUser,
+  }),
 }));
 
 jest.mock("react-i18next", () => ({
-    useTranslation: () => ({
-        t: (key: string) => key,
-        i18n: {
-            changeLanguage: mockChangeLanguage
-        }
-    })
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: {
+      language: "en",
+      changeLanguage: mockChangeLanguage,
+    },
+  }),
 }));
 
 beforeEach(() => {
-    jest.clearAllMocks();
+  jest.clearAllMocks();
 
-    global.fetch = jest.fn();
+  global.fetch = jest.fn();
 
-    Object.defineProperty(window, "location", {
-        writable: true,
-        value: {
-            href: ""
-        }
-    });
+  Object.defineProperty(window, "location", {
+    writable: true,
+    value: {
+      href: "",
+    },
+  });
 });
 
 function renderComponent() {
-    return render(
-        <MemoryRouter>
-            <LoginView />
-        </MemoryRouter>
-    );
+  return render(
+    <MemoryRouter>
+      <LoginView />
+    </MemoryRouter>
+  );
 }
 
 test("renders login form", async () => {
-    (fetch as jest.Mock).mockResolvedValue({
-        json: async () => null
-    });
+  (fetch as jest.Mock).mockResolvedValue({
+    json: async () => null,
+  });
 
-    renderComponent();
+  renderComponent();
 
-    expect(
-        screen.getByPlaceholderText("login.login")
-    ).toBeInTheDocument();
+  expect(
+    screen.getByPlaceholderText("login.login")
+  ).toBeInTheDocument();
 
-    expect(
-        screen.getByPlaceholderText("login.password")
-    ).toBeInTheDocument();
+  expect(
+    screen.getByPlaceholderText("login.password")
+  ).toBeInTheDocument();
 
-    expect(
-        screen.getByText("login.signIn")
-    ).toBeInTheDocument();
+  expect(
+    screen.getByText("login.signIn")
+  ).toBeInTheDocument();
+
+  await waitFor(() => {
+    expect(fetch).toHaveBeenCalled();
+  });
 });
 
 test("calls auth/me on mount", async () => {
-    (fetch as jest.Mock).mockResolvedValue({
-        json: async () => ({
-            id: 1,
-            email: "test@test.com"
-        })
-    });
+  (fetch as jest.Mock).mockResolvedValue({
+    json: async () => ({
+      id: 1,
+      email: "test@test.com",
+    }),
+  });
 
-    renderComponent();
+  renderComponent();
 
-    await waitFor(() => {
-        expect(fetch).toHaveBeenCalledWith(
-            "http://localhost:8080/auth/me",
-            expect.objectContaining({
-                method: "GET",
-                credentials: "include"
-            })
-        );
-    });
+  await waitFor(() => {
+    expect(fetch).toHaveBeenCalledWith(
+      "http://localhost:8080/auth/me",
+      expect.objectContaining({
+        method: "GET",
+        credentials: "include",
+      })
+    );
+  });
 
-    expect(mockSetUser).toHaveBeenCalled();
-    expect(mockNavigate).toHaveBeenCalledWith("/");
+  expect(mockSetUser).toHaveBeenCalled();
+  expect(mockNavigate).toHaveBeenCalledWith("/");
 });
 
 test("updates email and password inputs", async () => {
-    (fetch as jest.Mock).mockResolvedValue({
-        json: async () => null
-    });
+  (fetch as jest.Mock).mockResolvedValue({
+    json: async () => null,
+  });
 
-    renderComponent();
+  renderComponent();
 
-    const email =
-        screen.getByPlaceholderText("login.login");
+  await waitFor(() => {
+    expect(fetch).toHaveBeenCalled();
+  });
 
-    const password =
-        screen.getByPlaceholderText("login.password");
+  const email = screen.getByPlaceholderText("login.login");
+  const password = screen.getByPlaceholderText("login.password");
 
-    await userEvent.type(
-        email,
-        "john@test.com"
-    );
+  await userEvent.type(email, "john@test.com");
+  await userEvent.type(password, "123456");
 
-    await userEvent.type(
-        password,
-        "123456"
-    );
-
-    expect(email).toHaveValue(
-        "john@test.com"
-    );
-
-    expect(password).toHaveValue(
-        "123456"
-    );
+  expect(email).toHaveValue("john@test.com");
+  expect(password).toHaveValue("123456");
 });
 
 test("logs in and loads user", async () => {
-    (fetch as jest.Mock)
-        .mockResolvedValueOnce({
-            json: async () => null
-        }) // auth/me on mount
-        .mockResolvedValueOnce({
-            ok: true
-        }) // login
-        .mockResolvedValueOnce({
-            json: async () => ({
-                id: 1,
-                email: "john@test.com"
-            })
-        }); // auth/me after login
+  (fetch as jest.Mock)
+    .mockResolvedValueOnce({
+      json: async () => null,
+    }) // auth/me on mount
+    .mockResolvedValueOnce({
+      ok: true,
+    }) // login
+    .mockResolvedValueOnce({
+      json: async () => ({
+        id: 1,
+        email: "john@test.com",
+      }),
+    }); // auth/me after login
 
-    renderComponent();
+  renderComponent();
 
-    const email =
-        screen.getByPlaceholderText("login.login");
+  const email = screen.getByPlaceholderText("login.login");
+  const password = screen.getByPlaceholderText("login.password");
 
-    const password =
-        screen.getByPlaceholderText("login.password");
+  await userEvent.type(email, "john@test.com");
+  await userEvent.type(password, "123");
 
-    await userEvent.type(
-        email,
-        "john@test.com"
+  await userEvent.click(
+    screen.getByRole("button", {
+      name: "login.signIn",
+    })
+  );
+
+  await waitFor(() => {
+    expect(fetch).toHaveBeenCalledWith(
+      "http://localhost:8080/auth/login",
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify({
+          email: "john@test.com",
+          password: "123",
+        }),
+      })
     );
+  });
 
-    await userEvent.type(
-        password,
-        "123"
-    );
-
-    await userEvent.click(
-        screen.getByRole("button", {
-            name: "login.signIn"
-        })
-    );
-
-    await waitFor(() => {
-        expect(fetch).toHaveBeenCalledWith(
-            "http://localhost:8080/auth/login",
-            expect.objectContaining({
-                method: "POST",
-                body: JSON.stringify({
-                    email: "john@test.com",
-                    password: "123"
-                })
-            })
-        );
-    });
-
+  await waitFor(() => {
     expect(mockSetUser).toHaveBeenCalled();
     expect(mockNavigate).toHaveBeenCalledWith("/");
+  });
 });
 
 test("sets user null when login fails", async () => {
-    (fetch as jest.Mock)
-        .mockResolvedValueOnce({
-            json: async () => null
-        })
-        .mockResolvedValueOnce({
-            ok: false
-        });
-
-    renderComponent();
-
-    await userEvent.click(
-        screen.getByRole("button", {
-            name: "login.signIn"
-        })
-    );
-
-    await waitFor(() => {
-        expect(mockSetUser)
-            .toHaveBeenCalledWith(null);
+  (fetch as jest.Mock)
+    .mockResolvedValueOnce({
+      json: async () => null,
+    })
+    .mockResolvedValueOnce({
+      ok: false,
     });
+
+  renderComponent();
+
+ await userEvent.click(
+  screen.getByRole("button", {
+    name: "login.signIn",
+  })
+);
+
+await waitFor(() => {
+  expect(mockSetUser).toHaveBeenCalledWith(null);
+
+  expect(
+    screen.getByText("inputErrors.wrongLogin")
+  ).toBeInTheDocument();
+});
 });
 
 test("redirects to github oauth", async () => {
-    (fetch as jest.Mock).mockResolvedValue({
-        json: async () => null
-    });
+  (fetch as jest.Mock).mockResolvedValue({
+    json: async () => null,
+  });
 
-    renderComponent();
+  renderComponent();
 
-    await userEvent.click(
-        screen.getByRole("button", {
-            name: "login.signInWithGitHub"
-        })
-    );
+  await userEvent.click(
+    screen.getByRole("button", {
+      name: "login.signInWithGitHub",
+    })
+  );
 
-    expect(window.location.href).toBe(
-        "http://localhost:8080/auth/github/oauth"
-    );
+  expect(window.location.href).toBe(
+    "http://localhost:8080/auth/github/oauth"
+  );
 });
 
 test("changes language", async () => {
-    (fetch as jest.Mock).mockResolvedValue({
-        json: async () => null
-    });
+  (fetch as jest.Mock).mockResolvedValue({
+    json: async () => null,
+  });
 
-    renderComponent();
+  renderComponent();
 
-    await userEvent.click(
-        screen.getByText("PL")
-    );
+  await waitFor(() => {
+    expect(fetch).toHaveBeenCalled();
+  });
 
-    expect(
-        mockChangeLanguage
-    ).toHaveBeenCalledWith("pl");
+  await userEvent.click(
+    screen.getByTitle("Polski")
+  );
 
-    await userEvent.click(
-        screen.getByText("EN")
-    );
+  expect(mockChangeLanguage).toHaveBeenCalledWith("pl");
 
-    expect(
-        mockChangeLanguage
-    ).toHaveBeenCalledWith("en");
+  await userEvent.click(
+    screen.getByTitle("English")
+  );
+
+  expect(mockChangeLanguage).toHaveBeenCalledWith("en");
 });

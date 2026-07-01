@@ -567,7 +567,7 @@ export const PaymentsAdminView = () => {
                             )}
                             
                             <div className="flex justify-end mt-4">
-                                {payment.paymentStatus?.id === 0 && (
+                                {(payment.paymentStatus?.id === 0  && paymentToEdit !== payment.id) && (
                                     <button
                                         className="px-3 py-1 m-2 rounded-lg bg-green-600 text-white hover:opacity-90"
                                         onClick={() => payOffline(payment.id)}

@@ -196,7 +196,7 @@ export const FormView = () => {
         if (!template) return;
 
         if (!validateForm()) {
-                alert("Please fill all fields correctly");
+                alert(t("form.fill"));
                 return;
             }
 

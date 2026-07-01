@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { useAppContext } from "../App";
 
 export const RegisterUserView = () => {
   const navigate = useNavigate();
+  const { user } = useAppContext();
   const { t } = useTranslation();
   const [backendErrors, setBackendErrors] = useState<string[]>([]);
 
@@ -29,6 +31,7 @@ export const RegisterUserView = () => {
     t("roles.supervisor"),
     t("roles.worker"),
     t("roles.student"),
+    t("roles.admin")
   ];
 
   const roles = ["supervisor", "worker", "student"];
@@ -220,6 +223,7 @@ export const RegisterUserView = () => {
             })
           }
         >
+          {user?.role === "admin" && <option value="0">{rolesT[3]}</option>}
           <option value="1">{rolesT[0]}</option>
           <option value="2">{rolesT[1]}</option>
           <option value="3">{rolesT[2]}</option>
